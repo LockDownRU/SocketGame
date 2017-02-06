@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>SocketGame</title>
-    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet"  type="text/css" >
+    <link rel="stylesheet" href="css/ChatStyle.css" type="text/css" />
+    <link rel="shortcut icon" href="image/favicon.ico" type="image/x-icon" />
     <script src="js/pixi/pixi.js"></script>
 </head>
 <body>
+<div id="game">
 <h4 id="textInfo">Offline</h4>
 <canvas id="gameCanvas"></canvas>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
@@ -14,5 +17,12 @@
 <script src="js/Game/Socket.js"></script>
 <script src="js/Game/Keyboard.js"></script>
 <script src="js/Game/Game.js"></script>
+</div>
+<div id="chat">
+    <div>
+        <p>Nick: </p>
+        <input type="text" />
+    </div>
+</div>
 </body>
 </html>
