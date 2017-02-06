@@ -1,0 +1,307 @@
+var express = require('express');
+var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+http.listen(80, function () {
+    console.log('listening on *:80');
+});
+
+app.use(express.static(__dirname + '/public'));
+
+function Entity (id, type, posX, posY, width, height, speed, sprite, vX, vY, rotation, collision, collideIgnore, ttl) {
+
+    this.id = type + '-' + id || type + '-' + guid();
+    this.type = type;
+    this.posX = posX || 0;
+    this.posY = posY || 0;
+    this.speed = speed || 3;
+    this.sprite = sprite || 'image/bunny.png';
+    this.width = width || 50;
+    this.height = height || 50;
+
+    this.vX = vX || 0;
+    this.vY = vY || 0;
+
+    if (this.vX < -1 || this.vX > 1 || this.vY < -1 || this.vY > 1) {
+
+        this.vX = 0;
+        this.vY = 0;
+    }
+
+    this.rotation = rotation || 0.0;
+
+    this.prevPosX = this.posX;
+    this.prevPosY = this.posY;
+
+    this.collision = collision || true;
+    this.collideIgnore = collideIgnore || [ ];
+
+    this.ttl = ttl || -1;
+
+    this.getClientInfo = function () {
+        return {
+            entityId: this.id,
+            posX: this.posX,
+            posY: this.posY,
+            sprite: this.sprite,
+            width: this.width,
+            height: this.height,
+            rotation: this.rotation
+        };
+    };
+
+    this.getUpdateInfo = function () {
+        return {
+            entityId: this.id,
+            posX: this.posX,
+            posY: this.posY,
+            rotation: this.rotation
+        };
+    };
+
+    this.onCollide = function (entity) {
+
+    };
+
+    this.checkCollisionWith = function (e) {
+        function AABB(entity) {
+            return {
+                x: entity.posX - entity.width / 2 ,
+                y: entity.posY -  entity.height / 2,
+                width : entity.width,
+                height: entity.height
+            };
+        }
+
+        for (var i = 0 ; i < this.collideIgnore.length; i++){
+            if (e.id.includes(this.collideIgnore[i])) {
+                return false;
+            }
+        }
+
+        var rect1 = AABB(this);
+        var rect2 = AABB(e);
+
+        return rect1.x < rect2.x + rect2.width &&
+            rect1.x + rect1.width > rect2.x &&
+            rect1.y < rect2.y + rect2.height &&
+            rect1.height + rect1.y > rect2.y;
+    };
+
+}
+
+io.on('connection', function (socket) {
+
+    // Игрок
+    var player = {
+        entity: new Entity(socket.id, 'player', 0, 0, 26, 37, 2.5, 'image/bunny.png')
+    };
+    socket.player = player;
+
+    console.log(socket.id + ' Connected');
+
+
+    // Спавним игрока
+    ServerUtils.spawnEntity(player.entity);
+
+    // Камера на игрока
+    socket.emit('bindCamera', { id: player.entity.id });
+
+    // Отправка объектов
+    ServerUtils.sendEntityList(socket);
+
+    // Получение ввода клиента
+    socket.on('clientInput', function (input) {
+        socket.input = input;
+    });
+
+    // Клиентские ивенты
+    ServerUtils.initEvents(socket);
+
+
+    // Отключение клиента
+    socket.on('disconnect', function () {
+        console.log(socket.id + ' Disconnected');
+        ServerUtils.despawnEntityById(player.entity.id);
+    });
+});
+
+var entityList = {};
+
+var ServerUtils = {
+
+    initEvents: function (socket) {
+
+        // Огонь
+        socket.on('fire', function (norm) {
+
+            var ignoreIds = [ 'bullet-' ];
+            if (socket.player.entity !== null) {
+                ignoreIds.push(socket.player.entity.id);
+            }
+
+            var entity = new Entity(
+                guid(),
+                'bullet',
+                socket.player.entity.posX,
+                socket.player.entity.posY,
+                60,
+                16,
+                32,
+                'image/bullet.png',
+                norm.x,
+                norm.y,
+                Math.atan2(norm.y, norm.x),
+                true,
+                ignoreIds,
+                200
+            );
+            entity.onCollide = function (entity) {
+                ServerUtils.spawnEffect( {
+                    x: this.posX,
+                    y: this.posY,
+                    type: 'explosion'
+                });
+                entity.posX = 0;
+                entity.posY = 0;
+                ServerUtils.despawnEntityById(this.id);
+            };
+            ServerUtils.spawnEntity(entity);
+        });
+    },
+
+    spawnEffect: function (effect) {
+        io.emit('spawnEffect', effect);
+    },
+
+    spawnEntity: function (entity) {
+        entityList[entity.id] = entity;
+
+        io.emit('spawnEntity', entity.getClientInfo());
+    },
+
+    despawnEntityById: function (id) {
+        if (entityList.hasOwnProperty(id)) {
+            delete entityList[id];
+            io.emit('despawnEntity', {entityId: id});
+        }
+    },
+
+    sendEntityList: function (socket) {
+        var eList = [];
+        for (var entityId in entityList) {
+            if (entityList.hasOwnProperty(entityId)) {
+                var entity = entityList[entityId];
+                eList.push(entity.getClientInfo());
+            }
+        }
+        socket.emit('reloadEntityList', eList);
+    },
+
+    getCollisionIds: function (id) {
+        var collisionIds = [];
+
+        var entityMain = entityList[id];
+
+        for (var entityId in entityList) {
+            if (entityList.hasOwnProperty(entityId) && entityId !== id) {
+                var entity = entityList[entityId];
+
+                if (entity.collision === true) {
+                    // Check collision
+                    if (entityMain.checkCollisionWith(entity)) {
+                        collisionIds.push(entity.id);
+                    }
+                }
+            }
+        }
+        return collisionIds;
+    }
+};
+
+function tick() {
+
+    for (var sid in io.sockets.sockets) {
+        if (io.sockets.sockets.hasOwnProperty(sid)) {
+            var socket = io.sockets.sockets[sid];
+            if (socket.hasOwnProperty('input') && socket.hasOwnProperty('player')){
+
+                var player = socket.player;
+                var input = socket.input;
+
+                player.entity.vX = 0;
+                player.entity.vY = 0;
+
+                if (input.left) {
+                    player.entity.vX = -player.entity.speed;
+                }
+                if (input.right) {
+                    player.entity.vX = player.entity.speed;
+                }
+                if (input.up) {
+                    player.entity.vY = -player.entity.speed;
+                }
+                if (input.down) {
+                    player.entity.vY = player.entity.speed;
+                }
+
+            }
+        }
+    }
+
+    var updateList = [];
+    for (var entityName in entityList) {
+        if (entityList.hasOwnProperty(entityName)) {
+
+            var entity = entityList[entityName];
+
+            if (entity.ttl == 0) {
+
+                ServerUtils.despawnEntityById(entity.id);
+
+            } else {
+
+                if (entity.ttl != -1) {
+                    entity.ttl--;
+                }
+
+                entity.prevPosX = entity.posX;
+                entity.prevPosY = entity.posY;
+                entity.posX += entity.vX * entity.speed;
+                entity.posY += entity.vY * entity.speed;
+
+                if (entity.collision === true) {
+                    var collisions = ServerUtils.getCollisionIds(entity.id);
+                    for (var i = 0; i < collisions.length; i++) {
+                        var collideEntity = entityList[collisions[i]];
+                        entity.onCollide(collideEntity);
+                    }
+                }
+
+                if (entity.type === 'bullet') {
+                    //entity.rotation += 0.5;
+
+                }
+
+                updateList.push(entity.getUpdateInfo());
+
+            }
+        }
+    }
+
+    io.emit('positionUpdate', updateList);
+}
+
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+
+var tickTimer = setInterval(tick, 25);
