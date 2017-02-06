@@ -39,6 +39,9 @@ function Entity (id, type, posX, posY, width, height, speed, sprite, vX, vY, rot
 
     this.ttl = ttl || -1;
 
+
+    // Функции Entity
+
     this.getClientInfo = function () {
         return {
             entityId: this.id,
@@ -88,6 +91,8 @@ function Entity (id, type, posX, posY, width, height, speed, sprite, vX, vY, rot
             rect1.y < rect2.y + rect2.height &&
             rect1.height + rect1.y > rect2.y;
     };
+
+    //
 
 }
 

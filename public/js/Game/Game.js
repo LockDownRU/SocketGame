@@ -34,7 +34,7 @@ var Game = {
         }
 
         // Инициализация PIXI
-        this.renderer = new PIXI.Application(width, height, {view: gameCanvas, backgroundColor: backgroundColor}, false);
+        this.renderer = new PIXI.Application(Game.gameCanvas.clientWidth, Game.gameCanvas.clientHeight, {view: Game.gameCanvas, backgroundColor: backgroundColor}, false);
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
         // Контейнер для рисования
