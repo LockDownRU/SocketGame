@@ -40,6 +40,16 @@ var Game = {
         // Контейнер для рисования
         this.stage = this.renderer.stage;
 
+        // Инициализация клавиатуры и мышки
+        Game.keyboard = {
+            up: Key(87),
+            down: Key(83),
+            left: Key(65),
+            right: Key(68),
+            shift: Key(16)
+        };
+        Mouse.init();
+
         // Загрузка текстур
         PIXI.loader
             .add('spritesheet', 'image/mc.json')
@@ -54,14 +64,6 @@ var Game = {
                     Game.effectTextures['explosion'].push(texture);
                 }
 
-                // Инициализация клавиатуры
-                Game.keyboard = {
-                    up: Key(87),
-                    down: Key(83),
-                    left: Key(65),
-                    right: Key(68)
-                };
-
                 // Сокет
                 Game.socket.init();
 
@@ -70,28 +72,6 @@ var Game = {
 
                 // Рендер
                 Game.renderer.ticker.add(Game.renderLoop);
-
-
-                Game.gameCanvas.onmousedown = function (event) {
-                    var rect = Game.gameCanvas.getBoundingClientRect();
-
-                    var point = {};
-                    point.x = event.pageX - rect.left - (Game.renderer.renderer.width / 2);
-                    point.y = event.pageY - rect.top - (Game.renderer.renderer.height / 2);
-
-                    normalize(point);
-
-                    Socket.socket.emit('fire', point);
-                };
-
-                function normalize(point) {
-                    var norm = Math.sqrt(point.x * point.x + point.y * point.y);
-                    if (norm != 0) { // as3 return 0,0 for a point of zero length
-                        point.x = point.x / norm;
-                        point.y = point.y / norm;
-                    }
-                }
-
             });
 
     },
@@ -116,7 +96,12 @@ var Game = {
             left: Game.keyboard.left.isDown,
             up: Game.keyboard.up.isDown,
             right: Game.keyboard.right.isDown,
-            down: Game.keyboard.down.isDown
+            down: Game.keyboard.down.isDown,
+            shift: Game.keyboard.shift.isDown,
+            Mouse: {
+                isDown: Mouse.isDown,
+                position: Mouse.position
+            }
         });
     }
 };

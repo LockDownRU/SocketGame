@@ -100,9 +100,76 @@ io.on('connection', function (socket) {
 
     // Игрок
     var player = {
-        entity: new Entity(socket.id, 'player', 0, 0, 26, 37, 2.5, 'image/bunny.png')
+        entity: new Entity(socket.id, 'player', 0, 0, 26, 37, 2.5, 'image/bunny.png'),
+
+        AbilityManager: {
+
+            abilitiesList: { },
+
+
+            tryUseAbility: function (abilityName, data) {
+                if (this.abilitiesList.hasOwnProperty(abilityName)) {
+                    if (this.canUseAbility(abilityName)) {
+                        this.useAbility(abilityName, data);
+                    }
+                }
+            },
+
+            useAbility: function (abilityName, data) {
+                if (this.abilitiesList.hasOwnProperty(abilityName)) {
+                    this.abilitiesList[abilityName].use(player, data);
+                    this.startCoolDown(abilityName);
+                }
+            },
+
+            addAbility: function (abilityName, defaultCoolDown, use) {
+                if (!this.abilitiesList.hasOwnProperty(abilityName)) {
+                    this.abilitiesList[abilityName] = {
+                        use: use,
+                        cooldown: {
+                            timeleft: 0,
+                            default: defaultCoolDown
+                        }
+                    };
+                }
+            },
+
+            startCoolDown: function (abilityName) {
+                if (this.abilitiesList.hasOwnProperty(abilityName)) {
+                    this.abilitiesList[abilityName].cooldown.timeleft = this.abilitiesList[abilityName].cooldown.default;
+                }
+            },
+
+            setCoolDown: function (abilityName, value) {
+                if (this.abilitiesList.hasOwnProperty(abilityName)) {
+                    this.abilitiesList[abilityName].cooldown.timeleft = value;
+                }
+            },
+
+            canUseAbility: function (abilityName) {
+                if (this.abilitiesList.hasOwnProperty(abilityName)) {
+                    return this.abilitiesList[abilityName].cooldown.timeleft <= 0;
+                }
+                return false;
+            },
+
+            coolDownUpdate: function () {
+                for (var abilityName in this.abilitiesList) {
+                    if (this.abilitiesList.hasOwnProperty(abilityName)) {
+                        if (this.abilitiesList[abilityName].cooldown.timeleft > 0){
+                            this.abilitiesList[abilityName].cooldown.timeleft--;
+                        }
+                    }
+                }
+            }
+        }
+
     };
     socket.player = player;
+
+    player.AbilityManager.addAbility('fire', 7, function (player, data) {
+        GameUtils.playerFire(player, GameUtils.normalizeVector(data.input.Mouse.position));
+    });
 
     console.log(socket.id + ' Connected');
 
@@ -138,42 +205,6 @@ var ServerUtils = {
 
     initEvents: function (socket) {
 
-        // Огонь
-        socket.on('fire', function (norm) {
-
-            var ignoreIds = [ 'bullet-' ];
-            if (socket.player.entity !== null) {
-                ignoreIds.push(socket.player.entity.id);
-            }
-
-            var entity = new Entity(
-                guid(),
-                'bullet',
-                socket.player.entity.posX,
-                socket.player.entity.posY,
-                60,
-                16,
-                32,
-                'image/bullet.png',
-                norm.x,
-                norm.y,
-                Math.atan2(norm.y, norm.x),
-                true,
-                ignoreIds,
-                200
-            );
-            entity.onCollide = function (entity) {
-                ServerUtils.spawnEffect( {
-                    x: this.posX,
-                    y: this.posY,
-                    type: 'explosion'
-                });
-                entity.posX = 0;
-                entity.posY = 0;
-                ServerUtils.despawnEntityById(this.id);
-            };
-            ServerUtils.spawnEntity(entity);
-        });
     },
 
     spawnEffect: function (effect) {
@@ -225,6 +256,61 @@ var ServerUtils = {
     }
 };
 
+var GameUtils = {
+    playerFire: function (player, normVec) {
+        var ignoreIds = [ 'bullet-' ];
+
+        if (player.entity !== null) {
+            ignoreIds.push(player.entity.id);
+        }
+
+        var entity = new Entity(
+            guid(),
+            'bullet',
+            player.entity.posX,
+            player.entity.posY,
+            60,
+            20,
+            14,
+            'image/bullet.png',
+            normVec.x,
+            normVec.y,
+            Math.atan2(normVec.y, normVec.x),
+            true,
+            ignoreIds,
+            140
+        );
+
+        entity.onCollide = function (entity) {
+            ServerUtils.spawnEffect( {
+                x: this.posX,
+                y: this.posY,
+                type: 'explosion'
+            });
+            entity.posX = 0;
+            entity.posY = 0;
+            ServerUtils.despawnEntityById(this.id);
+        };
+
+        ServerUtils.spawnEntity(entity);
+    },
+
+    normalizeVector: function (vec) {
+        var norm = Math.sqrt(vec.x * vec.x + vec.y * vec.y);
+        if (norm != 0) {
+            return {
+                x: vec.x / norm,
+                y: vec.y / norm
+            };
+        } else {
+            return {
+                x: vec.x,
+                y: vec.y
+            };
+        }
+    }
+};
+
 function tick() {
 
     for (var sid in io.sockets.sockets) {
@@ -234,6 +320,8 @@ function tick() {
 
                 var player = socket.player;
                 var input = socket.input;
+
+                player.AbilityManager.coolDownUpdate();
 
                 player.entity.vX = 0;
                 player.entity.vY = 0;
@@ -249,6 +337,15 @@ function tick() {
                 }
                 if (input.down) {
                     player.entity.vY = player.entity.speed;
+                }
+
+                if (input.shift) {
+                    player.entity.vX *= 2;
+                    player.entity.vY *= 2;
+                }
+
+                if (input.Mouse.isDown) {
+                    player.AbilityManager.tryUseAbility('fire', { input: input });
                 }
 
             }
