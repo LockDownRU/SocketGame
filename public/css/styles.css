@@ -1,4 +1,50 @@
+@font-face {/*подключаем свои шрифты*/
+    font-family: 'shrift1';/* 'даём сами имя шрифту'*/
+    src: url(../fonts/10195.otf);/*перед скобками не должно быть пробелов*/
+}
+@font-face {/*подключаем свои шрифты*/
+    font-family: 'shrift2';/* 'даём сами имя шрифту'*/
+    src: url(../fonts/10406.ttf);/*перед скобками не должно быть пробелов*/
+}
+@font-face {/*подключаем свои шрифты*/
+    font-family: 'shrift3';/* 'даём сами имя шрифту'*/
+    src: url(../fonts/10200.ttf);/*перед скобками не должно быть пробелов*/
+}
+@font-face {/*подключаем свои шрифты*/
+    font-family: 'shrift4';/* 'даём сами имя шрифту'*/
+    src: url(../fonts/10053.ttf);/*перед скобками не должно быть пробелов*/
+}
+@font-face {/*подключаем свои шрифты*/
+    font-family: 'shrift5';/* 'даём сами имя шрифту'*/
+    src: url(../fonts/10401.otf);/*перед скобками не должно быть пробелов*/
+}
+
+
 #gameCanvas {
     width: 500px;
     height: 500px;
 }
+
+* {
+    margin: 0;
+}
+
+#game {
+    float: left;
+    width: 80%;
+    height: 100%;
+}
+#chat {
+    float: left;
+}
+
+#chat p {
+    float: left;
+    font-family: 'shrift1';
+}
+
+#chat input {
+    float: left;
+    width: 50px;
+}
+
