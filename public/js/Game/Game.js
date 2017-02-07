@@ -14,6 +14,7 @@ var Game = {
     gameCanvas: null,
     effectTextures: { },
 
+    textBindingList: { },
     entityList: { },
     camera: {
         id: null,
@@ -81,6 +82,36 @@ var Game = {
             if (Game.entityList.hasOwnProperty(Game.camera.id)) {
                 Game.camera.x = Game.entityList[Game.camera.id].x;
                 Game.camera.y = Game.entityList[Game.camera.id].y;
+            }
+        }
+
+        for (var entityBindingId in Game.textBindingList) {
+            if (Game.textBindingList.hasOwnProperty(entityBindingId) &&
+                Game.entityList.hasOwnProperty(entityBindingId)) {
+                var text = Game.textBindingList[entityBindingId];
+                if (text.hasOwnProperty('renderText')) {
+                    if (text.renderText != null) {
+                        // Change text
+                        if (text.renderText.text != text.text) {
+                            text.renderText.text = text.text;
+                        }
+                    } else {
+                        // Add text
+                        text.renderText = new PIXI.Text(text.text);
+                        text.renderText.x = Game.entityList[entityBindingId].x;
+                        text.renderText.y = Game.entityList[entityBindingId].y;
+                        Game.stage.addChild(text.renderText);
+                    }
+                } else {
+                    // Add text
+                    text.renderText = new PIXI.Text(text.text);
+                    text.renderText.x = Game.entityList[entityBindingId].x;
+                    text.renderText.y = Game.entityList[entityBindingId].y;
+                    Game.stage.addChild(text.renderText);
+                }
+
+                text.renderText.x = Game.entityList[entityBindingId].x;
+                text.renderText.y = Game.entityList[entityBindingId].y;
             }
         }
 

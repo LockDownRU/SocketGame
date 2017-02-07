@@ -28,6 +28,28 @@ var Socket = {
                     Game.entityList[updateData.entityId].x = updateData.posX;
                     Game.entityList[updateData.entityId].y = updateData.posY;
                     Game.entityList[updateData.entityId].rotation = updateData.rotation;
+                    if (updateData.bindText !== null) {
+                        if (Game.entityList[updateData.entityId].hasOwnProperty('bindText')){
+
+                            Game.entityList[updateData.entityId].bindText.text = updateData.bindText;
+                            Game.entityList[updateData.entityId].bindText.x = Game.entityList[updateData.entityId].x;
+                            Game.entityList[updateData.entityId].bindText.y = Game.entityList[updateData.entityId].y;
+
+                        } else {
+
+                            Game.entityList[updateData.entityId].bindText = new PIXI.Text(updateData.bindText);
+                            Game.entityList[updateData.entityId].bindText.anchor.set(0.5, 2.0);
+                            Game.entityList[updateData.entityId].bindText.x = Game.entityList[updateData.entityId].x;
+                            Game.entityList[updateData.entityId].bindText.y = Game.entityList[updateData.entityId].y;
+                            Game.stage.addChild(Game.entityList[updateData.entityId].bindText);
+
+                        }
+                    } else {
+                        if (Game.entityList[updateData.entityId].hasOwnProperty('bindText')){
+                            Game.entityList[updateData.entityId].bindText.destroy();
+                            delete Game.entityList[updateData.entityId].bindText;
+                        }
+                    }
                     if (Game.camera.id === updateData.entityId){
                         Game.camera.x = Game.entityList[updateData.entityId].x;
                         Game.camera.y = Game.entityList[updateData.entityId].y;
@@ -45,6 +67,16 @@ var Socket = {
             for (var i = 0; i < eList.length; i++) {
                 var entityInfo = eList[i];
                 addEntity(entityInfo);
+            }
+        });
+
+        this.socket.on('bindTextToEntity', function (data) {
+            if (data === null) {
+                if (Game.textBindingList.hasOwnProperty(data.entityId)) {
+                    delete Game.textBindingList[data.entityId];
+                }
+            } else {
+                Game.textBindingList[data.entityId] = {text: data.text};
             }
         });
 
@@ -72,8 +104,10 @@ var Socket = {
                     explosion.rotation = Math.random() * Math.PI;
                     explosion.scale.set(0.75 + Math.random() * 0.5);
                     explosion.loop = false;
+                    explosion.onComplete = function () {
+                        explosion.destroy();
+                    };
                     explosion.play();
-                    explosion.zOrder = -1;
                     Game.stage.addChild(explosion);
 
                     break;
@@ -103,11 +137,11 @@ function addEntity(entityInfo) {
         Game.entityList[entityInfo.entityId].width = entityInfo.width;
         Game.entityList[entityInfo.entityId].height = entityInfo.height;
         Game.stage.addChild(Game.entityList[entityInfo.entityId]);
-
     }
 }
 
 function removeEntity(id) {
+    removeText(Game.entityList[id]);
     removeSprite(Game.entityList[id]);
     delete Game.entityList[id];
 }
@@ -115,4 +149,10 @@ function removeEntity(id) {
 function removeSprite(sprite) {
     sprite.destroy();
     Game.stage.removeChild(sprite);
+}
+
+function removeText(sprite) {
+    if (sprite.hasOwnProperty('bindText')) {
+        sprite.bindText.destroy();
+    }
 }

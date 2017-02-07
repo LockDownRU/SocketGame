@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var dns = require('dns');
 
 http.listen(80, function () {
     console.log('listening on *:80');
@@ -39,6 +40,7 @@ function Entity (id, type, posX, posY, width, height, speed, sprite, vX, vY, rot
 
     this.ttl = ttl || -1;
 
+    this.bindText = null;
 
     // Функции Entity
 
@@ -50,7 +52,8 @@ function Entity (id, type, posX, posY, width, height, speed, sprite, vX, vY, rot
             sprite: this.sprite,
             width: this.width,
             height: this.height,
-            rotation: this.rotation
+            rotation: this.rotation,
+            bindText: this.bindText
         };
     };
 
@@ -59,7 +62,8 @@ function Entity (id, type, posX, posY, width, height, speed, sprite, vX, vY, rot
             entityId: this.id,
             posX: this.posX,
             posY: this.posY,
-            rotation: this.rotation
+            rotation: this.rotation,
+            bindText: this.bindText
         };
     };
 
@@ -167,15 +171,39 @@ io.on('connection', function (socket) {
     };
     socket.player = player;
 
+    console.log(socket.id + ' Connected');
+
+    // Спавним игрока
+    ServerUtils.spawnEntity(player.entity);
+
+    // Способн.
     player.AbilityManager.addAbility('fire', 7, function (player, data) {
         GameUtils.playerFire(player, GameUtils.normalizeVector(data.input.Mouse.position));
     });
 
-    console.log(socket.id + ' Connected');
+    // Name
+    var address = socket.client.conn.remoteAddress;
+    if (address.length > 7 || address.startsWith('::ffff:')) {
+        address = address.substring(7);
+    }
 
+    player.entity.bindText = address;
+    dns.reverse(address, function(err, domain) {
+        if(err) {
+            console.log(err);
+            return;
+        }
+        if (domain.length > 0) {
+            player.entity.bindText = domain[0];
+        }
+    });
 
-    // Спавним игрока
-    ServerUtils.spawnEntity(player.entity);
+    if (address == '127.0.0.1' || address == '::1') {
+        player.entity.bindText = 'ADMINISTRATOR!';
+        console.log('Local - ' + player.entity.id);
+        // Local iP
+    }
+
 
     // Камера на игрока
     socket.emit('bindCamera', { id: player.entity.id });
@@ -258,7 +286,9 @@ var ServerUtils = {
 
 var GameUtils = {
     playerFire: function (player, normVec) {
-        var ignoreIds = [ 'bullet-' ];
+        var ignoreIds = [  ];
+
+        // 'bullet-'
 
         if (player.entity !== null) {
             ignoreIds.push(player.entity.id);
@@ -271,7 +301,7 @@ var GameUtils = {
             player.entity.posY,
             60,
             20,
-            14,
+            13,
             'image/bullet.png',
             normVec.x,
             normVec.y,
@@ -287,8 +317,11 @@ var GameUtils = {
                 y: this.posY,
                 type: 'explosion'
             });
-            entity.posX = 0;
-            entity.posY = 0;
+
+            if (entity.type == 'player') {
+                entity.posX = 0;
+                entity.posY = 0;
+            }
             ServerUtils.despawnEntityById(this.id);
         };
 
