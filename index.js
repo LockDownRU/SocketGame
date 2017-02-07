@@ -194,12 +194,12 @@ io.on('connection', function (socket) {
             return;
         }
         if (domain.length > 0) {
-            player.entity.bindText = domain[0];
+            player.entity.bindText = domain[0].replace(/\s*\.itstep\.lan\s*/g, '').toUpperCase()
         }
     });
 
     if (address == '127.0.0.1' || address == '::1') {
-        player.entity.bindText = 'ADMINISTRATOR!';
+        player.entity.bindText = '.:..::$ADMINISTRATOR$::..:.';
         console.log('Local - ' + player.entity.id);
         // Local iP
     }
