@@ -10,7 +10,7 @@ http.listen(80, function () {
 
 app.use(express.static(__dirname + '/public'));
 
-function Entity (id, type, posX, posY, width, height, speed, sprite, vX, vY, rotation, collision, collideIgnore, ttl) {
+function Entity (id, type, posX, posY, width, height, speed, sprite, parent, vX, vY, rotation, collision, collideIgnore, ttl) {
 
     this.id = type + '-' + id || type + '-' + guid();
     this.type = type;
@@ -20,6 +20,10 @@ function Entity (id, type, posX, posY, width, height, speed, sprite, vX, vY, rot
     this.sprite = sprite || 'image/bunny.png';
     this.width = width || 50;
     this.height = height || 50;
+
+    this.hp = 10;
+
+    this.parent = parent || null;
 
     this.vX = vX || 0;
     this.vY = vY || 0;
@@ -58,12 +62,16 @@ function Entity (id, type, posX, posY, width, height, speed, sprite, vX, vY, rot
     };
 
     this.getUpdateInfo = function () {
+        var bt = null;
+        if (this.bindText !== null) {
+            bt = this.bindText + '\n<' + this.hp + '|10>';
+        }
         return {
             entityId: this.id,
             posX: this.posX,
             posY: this.posY,
             rotation: this.rotation,
-            bindText: this.bindText
+            bindText: bt
         };
     };
 
@@ -176,11 +184,6 @@ io.on('connection', function (socket) {
     // Спавним игрока
     ServerUtils.spawnEntity(player.entity);
 
-    // Способн.
-    player.AbilityManager.addAbility('fire', 7, function (player, data) {
-        GameUtils.playerFire(player, GameUtils.normalizeVector(data.input.Mouse.position));
-    });
-
     // Name
     var address = socket.client.conn.remoteAddress;
     if (address.length > 7 || address.startsWith('::ffff:')) {
@@ -190,7 +193,6 @@ io.on('connection', function (socket) {
     player.entity.bindText = address;
     dns.reverse(address, function(err, domain) {
         if(err) {
-            console.log(err);
             return;
         }
         if (domain.length > 0) {
@@ -200,8 +202,19 @@ io.on('connection', function (socket) {
 
     if (address == '127.0.0.1' || address == '::1') {
         player.entity.bindText = '.:..::$ADMINISTRATOR$::..:.';
+
+        player.entity.hp = 100;
+        player.AbilityManager.addAbility('fire', 1, function (player, data) {
+            GameUtils.playerFire(player, GameUtils.normalizeVector(data.input.Mouse.position), 60);
+        });
+
         console.log('Local - ' + player.entity.id);
         // Local iP
+    } else {
+        // Способн.
+        player.AbilityManager.addAbility('fire', 7, function (player, data) {
+            GameUtils.playerFire(player, GameUtils.normalizeVector(data.input.Mouse.position));
+        });
     }
 
 
@@ -285,7 +298,7 @@ var ServerUtils = {
 };
 
 var GameUtils = {
-    playerFire: function (player, normVec) {
+    playerFire: function (player, normVec, speed) {
         var ignoreIds = [  ];
 
         // 'bullet-'
@@ -301,8 +314,9 @@ var GameUtils = {
             player.entity.posY,
             60,
             20,
-            13,
+            speed || 16,
             'image/bullet.png',
+            player.entity.id,
             normVec.x,
             normVec.y,
             Math.atan2(normVec.y, normVec.x),
@@ -312,17 +326,24 @@ var GameUtils = {
         );
 
         entity.onCollide = function (entity) {
-            ServerUtils.spawnEffect( {
-                x: this.posX,
-                y: this.posY,
-                type: 'explosion'
-            });
-
             if (entity.type == 'player') {
-                entity.posX = 0;
-                entity.posY = 0;
+                if (entity.hp <= 0) {
+                    entity.hp = 10;
+                    entity.posX = 0;
+                    entity.posY = 0;
+                } else {
+                    entity.hp--;
+                }
             }
-            ServerUtils.despawnEntityById(this.id);
+
+            if (entity.parent !== player.entity.id) {
+                ServerUtils.despawnEntityById(this.id);
+                ServerUtils.spawnEffect( {
+                    x: this.posX,
+                    y: this.posY,
+                    type: 'explosion'
+                });
+            }
         };
 
         ServerUtils.spawnEntity(entity);
