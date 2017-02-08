@@ -9,10 +9,11 @@
     <script src="js/pixi/pixi.js"></script>
 </head>
 <body>
-<div>
-    <h4 id="textInfo">Offline</h4>
+<div id="textInfo">
+    <h4>Offline</h4>
 </div>
 <div id="game">
+
     <canvas id="gameCanvas"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -21,35 +22,89 @@
     <script src="js/Game/Game.js"></script>
 </div>
 <div id="chats">
-    <div>
-        <div class="nick">
-            <div class="title">
-                <p id="nickname">Nickname</p>
+    <div class="nick item-1">
+        <div class="nick-title">
+            <span class="label-1" id="nickname">Nickname</span>
+        </div>
+    </div>
+    <div class="online-container item-1">
+        <div class="internal-online-container">
+            <div class="title-item"><span class="label-1">Players online</span></div>
+            <div class="list-item">
+                <ul>
+                    <li><span class="playerItem">mirinda</span></li>
+                    <li><span class="playerItem">mirinda</span></li>
+                    <li><span class="playerItem">mirinda</span></li>
+                    <li><span class="playerItem">mirinda</span></li>
+                    <li><span class="playerItem">mirinda</span></li>
+                    <li><span class="playerItem">mirinda</span></li>
+                    <li><span class="playerItem">mirinda</span></li>
+                    <li><span class="playerItem">mirinda</span></li>
+                    <li><span class="playerItem">mirinda</span></li>
+                    <li><span class="playerItem">mirinda</span></li>
+                    <li><span class="playerItem">mirinda</span></li>
+                    <li><span class="playerItem">mirinda</span></li>
+                </ul>
             </div>
         </div>
-        <hr />
-        <div class="online">
-            <div class="title">
+    </div>
+    <div class="chat-container item-1">
+        <div class="internal-chat-container">
+            <div class="message-list-item">
+                <ul>
+                    <li class="not-your-message" >
+                        <div class="msg-author">
+                            <p>mirinda</p>
+                        </div>
+                        <div class="msg-text">
+                            <p>nice to meet ur mum tonight</p>
+                        </div>
+                    </li>
+                    <li class="your-message">
+                        <div class="msg-author">
+                            <p>mirinda</p>
+                        </div>
+                        <div class="msg-text">
+                            <p>nice to meet ur mum tonight</p>
+                        </div>
+                    </li>
+                    <li class="not-your-message">
+                        <div class="msg-author">
+                            <p>mirinda</p>
+                        </div>
+                        <div class="msg-text">
+                            <p>nice to meet ur mum tonight</p>
+                        </div>
+                    </li>
+                    <li class="not-your-message">
+                        <div class="msg-author">
+                            <p>mirinda</p>
+                        </div>
+                        <div class="msg-text">
+                            <p>nice to meet ur mum tonight</p>
+                        </div>
+                    </li>
+                    <li class="your-message">
+                        <div class="msg-author">
+                            <p>mirinda</p>
+                        </div>
+                        <div class="msg-text">
+                            <p>nice to meet ur mum tonight</p>
+                        </div>
+                    </li>
+                </ul>
+            </div><!--placeholder="Enter your message"-->
+            <div class="message-container">
+                <div>
+                    <input type="text" title="message"  class="message-input" placeholder="Enter your message">
+                </div>
+                <div>
+                    <input type="button" class="send-button">
+                </div>
+
 
             </div>
-            <div class="list">
 
-            </div>
-        </div>
-        <hr />
-        <div class="chat">
-
-            <h6>Chat:</h6>
-            <p>name</p>
-            <p>name</p>
-            <p>name</p>
-            <p>name</p>
-            <p>name</p>
-            <p>name</p>
-            <p>name</p>
-            <p>name</p>
-            <p>name</p>
-            <p>name</p>
         </div>
     </div>
 </div>
