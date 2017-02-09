@@ -235,3 +235,31 @@ input[placeholder] {
     color: #87644F;
     margin: 0;
 }
+
+.w3-progress-container {
+    width: 100%; /*absolute*/
+    height: 30px;
+    background-color: #f1f1f1;
+}
+
+.w3-progressbar {
+    height: 100%;
+    position: absolute;
+    line-height: inherit;
+}
+
+.w3-green {
+    color: #fff!important;
+    background-color: #4CAF50!important;
+    height: 100%;
+    position: absolute;
+    line-height: inherit;
+}
+
+.w3-center {
+    text-align: center!important;
+}
+
+.w3-text-white {
+    color: #fff!important;
+}

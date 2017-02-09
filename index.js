@@ -331,8 +331,24 @@ var GameUtils = {
                     entity.hp = 10;
                     entity.posX = 0;
                     entity.posY = 0;
+                    var elem = document.getElementById("myBar");
+                    elem.style.width = 100 + '%';
+                    document.getElementById("demo").innerHTML = 100  + '%';
                 } else {
                     entity.hp--;
+                    var elem = document.getElementById("myBar");
+                    var width = parseInt(elem.style.width);
+                    var end_width = width - 10;
+                    var id = setInterval(frame, 20);
+                    function frame() {
+                        if (width > end_width) {
+                            width--;
+                            elem.style.width = width + '%';
+                            document.getElementById("demo").innerHTML = width * 1  + '%';
+                        } else {
+                            clearInterval(id);
+                        }
+                    }
                 }
             }
 
