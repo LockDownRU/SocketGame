@@ -57,7 +57,7 @@ html, body {
     top: 0;
     right: 0;
     width: 258px;
-    height: 640px;
+    height: 100%;
 }
 
 .label-1 {
@@ -99,25 +99,25 @@ html, body {
     align-items: stretch;
     width: 250px;
     min-height: 250px;
-    height: 40.3125%;
+    height: 39.0625%;
 }
 
 .internal-online-container {
-    height: 238px;
-    width: 230px;
-    margin: 10px;
+    height: 92%;
+    width: 92%;
+    margin: 4%;
 }
 
 .title-item {
     position: relative;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 4%;
 }
 
 .list-item {
     position: relative;
-    height: 189px;
-    width: 226px;
+    height: 78.6957%;
+    width: 98.4%;
     background-color: #F0FFB3;
     border: 2pt solid #808080;
     overflow-y: auto;
@@ -140,19 +140,19 @@ html, body {
 .chat-container {
     position: relative;
     width: 250px;
-    min-height: 324px;
-    height: 50.625%;
+    min-height: 316px;
+    height: 49.375%;
 }
 
 .internal-chat-container {
-    height: 304px;
-    width: 230px;
-    margin: 10px;
+    height: 93.671%;
+    width: 92%;
+    margin: 4%;
 }
 
 .message-list-item {
-    width: 226px;
-    height: 262px;
+    width: 98.261%;
+    height: 85.81%;
     background-color: #F0FFB3;
     border: 2pt solid #808080;
     overflow-y: auto;
@@ -185,22 +185,23 @@ html, body {
 
 .message-container {
     display: flex;
-    margin-top: 10px;
+    margin-top: 3.94%;
     height: 28px;
-    width: 230px;
+    width: 100%;
 }
 
 .message-input {
-    width: 196px;
+    width: 190px;
     height: 24px;
     background-color: #F0FFB3;
     border: 2pt solid #808080;
+    padding: 0;
 }
 
 input[type=button] {
     height: 28px;
     width: 28px;
-    margin-left: 5px;
+    margin-left: 8px;
     background-image: url("images/send-button.png");
     background-size: contain;
 }
