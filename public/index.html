@@ -7,26 +7,9 @@
     <link rel="stylesheet" href="css/ChatStyle.css" type="text/css" />
     <link rel="shortcut icon" href="image/favicon.ico" type="image/x-icon" />
     <script src="js/pixi/pixi.js"></script>
-    <script>
-        function attack() {
-            var elem = document.getElementById("myBar");
-            var width = parseInt(elem.style.width);
-            var end_width = width - 10;
-            var id = setInterval(frame, 20);
-            function frame() {
-                if (width > end_width) {
-                    width--;
-                    elem.style.width = width + '%';
-                    document.getElementById("demo").innerHTML = width * 1  + '%';
-                } else {
-                    clearInterval(id);
-                }
-            }
-        }
-
-    </script>
+    <script src="js/maintenance.js"></script>
 </head>
-<body>
+<body onresize="resize()" onload="resize()">
 <div id="textInfo">
     <h4>Offline</h4>
 </div>
@@ -45,10 +28,10 @@
             <span class="label-1" id="nickname">Nickname</span>
         </div>
     </div>
-    <div class="online-container item-1">
-        <div class="internal-online-container">
+    <div class="online-container item-1" id="OC">
+        <div class="internal-online-container" id="IOC">
             <div class="title-item"><span class="label-1">Players online</span></div>
-            <div class="list-item">
+            <div class="list-item" id="LI">
                 <ul>
                     <li><span class="playerItem">mirinda</span></li>
                     <li><span class="playerItem">mirinda</span></li>
@@ -66,9 +49,9 @@
             </div>
         </div>
     </div>
-    <div class="chat-container item-1">
-        <div class="internal-chat-container">
-            <div class="message-list-item">
+    <div class="chat-container item-1" id="CC">
+        <div class="internal-chat-container" id="ICC">
+            <div class="message-list-item" id="MLI">
                 <ul>
                     <li class="not-your-message" >
                         <div class="msg-author">

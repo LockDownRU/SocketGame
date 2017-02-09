@@ -58,6 +58,7 @@ html, body {
     right: 0;
     width: 258px;
     height: 100%;
+    overflow-y: scroll;
 }
 
 .label-1 {
@@ -99,25 +100,24 @@ html, body {
     align-items: stretch;
     width: 250px;
     min-height: 250px;
-    height: 39.0625%;
 }
 
 .internal-online-container {
-    height: 92%;
-    width: 92%;
-    margin: 4%;
+    min-height: 230px;
+    width: 230px;
+    margin: 10px;
 }
 
 .title-item {
     position: relative;
     width: 100%;
-    margin-bottom: 4%;
+    margin-bottom: 10px;
 }
 
 .list-item {
     position: relative;
-    height: 78.6957%;
-    width: 98.4%;
+    min-height: 181px;
+    width: 226px;
     background-color: #F0FFB3;
     border: 2pt solid #808080;
     overflow-y: auto;
@@ -141,18 +141,17 @@ html, body {
     position: relative;
     width: 250px;
     min-height: 316px;
-    height: 49.375%;
 }
 
 .internal-chat-container {
-    height: 93.671%;
-    width: 92%;
-    margin: 4%;
+    min-height: 296px;
+    width: 230px;
+    margin: 10px;
 }
 
 .message-list-item {
-    width: 98.261%;
-    height: 85.81%;
+    width: 226px;
+    min-height: 254px;
     background-color: #F0FFB3;
     border: 2pt solid #808080;
     overflow-y: auto;
@@ -162,7 +161,6 @@ html, body {
     margin: 0;
     padding: 0;
     list-style-type: none;
-
 }
 
 .not-your-message {
@@ -185,7 +183,7 @@ html, body {
 
 .message-container {
     display: flex;
-    margin-top: 3.94%;
+    margin-top: 10px;
     height: 28px;
     width: 100%;
 }
