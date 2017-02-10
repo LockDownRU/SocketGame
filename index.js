@@ -112,7 +112,7 @@ io.on('connection', function (socket) {
 
     // Игрок
     var player = {
-        entity: new Entity(socket.id, 'player', 0, 0, 26, 37, 2.5, 'image/bunny.png'),
+        entity: new Entity(socket.id, 'player', 0, 0, 26, 37, 0.5, 'image/bunny.png'),
 
         AbilityManager: {
 
@@ -203,9 +203,9 @@ io.on('connection', function (socket) {
     if (address == '127.0.0.1' || address == '::1') {
         player.entity.bindText = '.:..::$ADMINISTRATOR$::..:.';
 
-        player.entity.hp = 100;
-        player.AbilityManager.addAbility('fire', 1, function (player, data) {
-            GameUtils.playerFire(player, GameUtils.normalizeVector(data.input.Mouse.position), 60);
+        player.entity.hp = 10;
+        player.AbilityManager.addAbility('fire', 5, function (player, data) {
+            GameUtils.playerFire(player, GameUtils.normalizeVector(data.input.Mouse.position), 12);
         });
 
         console.log('Local - ' + player.entity.id);
@@ -381,6 +381,8 @@ var GameUtils = {
     }
 };
 
+var ind = 0;
+
 function tick() {
 
     for (var sid in io.sockets.sockets) {
@@ -407,6 +409,38 @@ function tick() {
                 }
                 if (input.down) {
                     player.entity.vY = player.entity.speed;
+                }
+
+                // Чтобы выключить управление мышкой установить switcher = 0
+                var switcher = 0;
+
+                if (switcher != 0){
+                    // С помощью радиуса высчитываем расстояние до игрока
+                    var m_x = input.Mouse.position.x, m_y = input.Mouse.position.y;
+                    var radius = Math.sqrt(Math.pow(m_x,2)+Math.pow(m_y,2));
+
+                    // Коэффициент регулирующий скорость игрока, чем меньше тем быстрее
+                    var koef = 40;
+
+                    if (radius>=200){
+                        player.entity.vX = player.entity.speed * Math.round(m_x / koef);
+                        player.entity.vY = player.entity.speed * Math.round(m_y / koef);
+                    }
+                }
+
+                // Чтобы выключить вывода информации на консоль измените switcher_console
+                var switcher_console = "off";
+
+                if (switcher_console == "on"){
+                    //Блок вывода информации на консоль каждые sec
+                    ind++;
+                    var sec = 1;
+                    if (ind==(sec*1000/25)){
+                        ind = 0;
+                        console.log("Point X: " + m_x + "; Y: " + m_y);
+                        console.log("Speed vX: " + player.entity.vX + "; vY: " + player.entity.vY);
+                        console.log(radius);
+                    }
                 }
 
                 if (input.shift) {

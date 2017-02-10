@@ -35,3 +35,4 @@ function resize() {
     internal_chat_container.style.height = parseFloat(chat_container.style.height) - 20 + "px";
     message_list_item.style.height = parseFloat(internal_chat_container.style.height) - 38 - 4 + "px";
 }
+
