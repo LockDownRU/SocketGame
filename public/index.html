@@ -3,115 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>SocketGame</title>
-    <link href="css/styles.css" rel="stylesheet"  type="text/css" >
-    <link rel="stylesheet" href="css/ChatStyle.css" type="text/css" />
-    <link rel="shortcut icon" href="image/favicon.ico" type="image/x-icon" />
-    <script src="js/pixi/pixi.js"></script>
-    <script src="js/maintenance.js"></script>
-</head>
-<body onresize="resize()" onload="resize()">
-<div id="textInfo">
-    <h4>Offline</h4>
-</div>
-<div id="game">
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="image/favicon.ico" type="image/x-icon"/>
 
-    <canvas id="gameCanvas"/>
+    <script src="js/pixi/pixi.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+
+</head>
+<body>
+
+<div id="game"> <!-- Игра -->
+    <div id="textInfo">
+        Offline
+    </div>
+    <div class="hpBarBlock">
+        <div id="hpBar" class="hpBar">
+            <div id="hpStatus" class="hpStatus"></div>
+        </div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
     <script src="js/Game/Socket.js"></script>
     <script src="js/Game/Keyboard.js"></script>
     <script src="js/Game/Game.js"></script>
 </div>
-<div id="chats">
-    <div class="nick item-1">
+
+<div id="chat"> <!-- Чат -->
+    <div class="nick-container item">
         <div class="nick-title">
-            <span class="label-1" id="nickname">Nickname</span>
+            <span class="label" id="nickname">Nickname</span>
         </div>
     </div>
-    <div class="online-container item-1" id="OC">
-        <div class="internal-online-container" id="IOC">
-            <div class="title-item"><span class="label-1">Players online</span></div>
-            <div class="list-item" id="LI">
-                <ul>
-                    <li><span class="playerItem">mirinda</span></li>
-                    <li><span class="playerItem">mirinda</span></li>
-                    <li><span class="playerItem">mirinda</span></li>
-                    <li><span class="playerItem">mirinda</span></li>
-                    <li><span class="playerItem">mirinda</span></li>
-                    <li><span class="playerItem">mirinda</span></li>
-                    <li><span class="playerItem">mirinda</span></li>
-                    <li><span class="playerItem">mirinda</span></li>
-                    <li><span class="playerItem">mirinda</span></li>
-                    <li><span class="playerItem">mirinda</span></li>
-                    <li><span class="playerItem">mirinda</span></li>
-                    <li><span class="playerItem">mirinda</span></li>
-                </ul>
-            </div>
+    <div class="online-container item">
+        <div class="onlineBox">
+            <!-- IScroll5 контейнер со списком игроков или какой-то свой блок -->
         </div>
     </div>
-    <div class="chat-container item-1" id="CC">
-        <div class="internal-chat-container" id="ICC">
-            <div class="message-list-item" id="MLI">
-                <ul>
-                    <li class="not-your-message" >
-                        <div class="msg-author">
-                            <p>mirinda</p>
-                        </div>
-                        <div class="msg-text">
-                            <p>nice to meet ur mum tonight</p>
-                        </div>
-                    </li>
-                    <li class="your-message">
-                        <div class="msg-author">
-                            <p>mirinda</p>
-                        </div>
-                        <div class="msg-text">
-                            <p>nice to meet ur mum tonight</p>
-                        </div>
-                    </li>
-                    <li class="not-your-message">
-                        <div class="msg-author">
-                            <p>mirinda</p>
-                        </div>
-                        <div class="msg-text">
-                            <p>nice to meet ur mum tonight</p>
-                        </div>
-                    </li>
-                    <li class="not-your-message">
-                        <div class="msg-author">
-                            <p>mirinda</p>
-                        </div>
-                        <div class="msg-text">
-                            <p>nice to meet ur mum tonight</p>
-                        </div>
-                    </li>
-                    <li class="your-message">
-                        <div class="msg-author">
-                            <p>mirinda</p>
-                        </div>
-                        <div class="msg-text">
-                            <p>nice to meet ur mum tonight</p>
-                        </div>
-                    </li>
-                </ul>
-            </div><!--placeholder="Enter your message"-->
-            <div class="message-container">
-                <div>
-                    <input type="text" title="message"  class="message-input" placeholder="Enter your message">
-                </div>
-                <div>
-                    <input type="button" class="send-button" onclick="attack()">
-                </div>
-            </div>
+    <div class="chat-container item">
+        <div class="chatMessagesBox">
+            <!-- IScroll5 контейнер с автоматическим добавлением сообщений и прокруткой. Всё уже реализовано в SocketChat! -->
+        </div>
+        <div class="chatSendBox">
+            <input type="text" title="message" class="message-input" placeholder="Enter your message"
+                   style="flex: 1 1 100%;">
+            <input type="button" class="send-button" style="flex: 1 1 auto;">
         </div>
     </div>
 </div>
-<div style="position: absolute; bottom: 20px; left: 30%; width: 40%;">
-    <div class="w3-progress-container">
-        <div id="myBar" class="w3-progressbar w3-green" style="width:100%">
-            <div id="demo" class="w3-center w3-text-white">100%</div>
-        </div>
-    </div>
-</div>
+
 </body>
 </html>
