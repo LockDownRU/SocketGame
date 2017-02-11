@@ -4,19 +4,24 @@ function Key(keyCode) {
         isDown: false,
         downEvent: undefined,
         upEvent: undefined,
+
         downHandler: function (event) {
-            if (event.keyCode === key.code) {
-                if (!key.isDown && key.downEvent) key.downEvent();
-                key.isDown = true;
+            if(lastDownTarget == Game.gameCanvas) {
+                if (event.keyCode === key.code) {
+                    if (!key.isDown && key.downEvent) key.downEvent();
+                    key.isDown = true;
+                }
+                event.preventDefault();
             }
-            event.preventDefault();
         },
         upHandler: function (event) {
-            if (event.keyCode === key.code) {
-                if (key.isDown && key.upEvent) key.upEvent();
-                key.isDown = false;
+            if(lastDownTarget == Game.gameCanvas) {
+                if (event.keyCode === key.code) {
+                    if (key.isDown && key.upEvent) key.upEvent();
+                    key.isDown = false;
+                }
+                event.preventDefault();
             }
-            event.preventDefault();
         }
     };
 
@@ -30,6 +35,8 @@ function Key(keyCode) {
     return key;
 }
 
+var lastDownTarget = null;
+
 var Mouse = {
 
     isDown: false,
@@ -39,6 +46,11 @@ var Mouse = {
     },
 
     init: function () {
+        lastDownTarget = Game.gameCanvas;
+        window.addEventListener('mousedown', function(event) {
+            lastDownTarget = event.target;
+        }, false);
+
         Game.gameCanvas.onmousedown = function (event) {
             Mouse.isDown = true;
         };

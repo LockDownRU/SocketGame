@@ -28,6 +28,7 @@ var Game = {
         if (this.gameCanvas === null) {
             throw "Invalid Element ID.";
         }
+
         // Html Вывод текста
         this.textInfo = document.getElementById("textInfo");
         if (this.textInfo === null) {
