@@ -112,7 +112,7 @@ io.on('connection', function (socket) {
 
     // Игрок
     var player = {
-        entity: new Entity(socket.id, 'player', 0, 0, 26, 37, 0.5, 'image/bunny.png'),
+        entity: new Entity(socket.id, 'player', 0, 0, 26, 37, 0.5, 'image/bunny.png', socket),
 
         AbilityManager: {
 
@@ -326,28 +326,21 @@ var GameUtils = {
         );
 
         entity.onCollide = function (entity) {
+            var socket = undefined;
             if (entity.type == 'player') {
                 if (entity.hp <= 0) {
                     entity.hp = 10;
                     entity.posX = 0;
                     entity.posY = 0;
-                    var elem = document.getElementById("myBar");
-                    elem.style.width = 100 + '%';
-                    document.getElementById("demo").innerHTML = 100  + '%';
+                    if (entity.parent != null) {
+                        socket = entity.parent;
+                        socket.emit('hpUpdate', {hp: entity.hp});
+                    }
                 } else {
                     entity.hp--;
-                    var elem = document.getElementById("myBar");
-                    var width = parseInt(elem.style.width);
-                    var end_width = width - 10;
-                    var id = setInterval(frame, 20);
-                    function frame() {
-                        if (width > end_width) {
-                            width--;
-                            elem.style.width = width + '%';
-                            document.getElementById("demo").innerHTML = width * 1  + '%';
-                        } else {
-                            clearInterval(id);
-                        }
+                    if (entity.parent != null) {
+                        socket = entity.parent;
+                        socket.emit('hpUpdate', {hp: entity.hp});
                     }
                 }
             }
@@ -412,9 +405,9 @@ function tick() {
                 }
 
                 // Чтобы выключить управление мышкой установить switcher = 0
-                var switcher = 0;
+                var switcher = 1;
 
-                if (switcher != 0){
+                if (switcher != 1){
                     // С помощью радиуса высчитываем расстояние до игрока
                     var m_x = input.Mouse.position.x, m_y = input.Mouse.position.y;
                     var radius = Math.sqrt(Math.pow(m_x,2)+Math.pow(m_y,2));
