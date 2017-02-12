@@ -1,8 +1,7 @@
 let dns = require('dns');
 
-class ServerUtils {
-
-    static getClientHostname(ip, callback) {
+let ServerUtils = {
+    getClientHostname: (ip, callback) => {
         dns.reverse(ip, function(err, domains) {
             if (err) {
                 callback(null);
@@ -16,16 +15,15 @@ class ServerUtils {
 
             callback(null);
         });
-    }
+    },
 
-    static getClientIp(socket) {
+    getClientIp: (socket) => {
         let ip = socket.client.conn.remoteAddress;
         if (ip.length > 7 && ip.startsWith('::ffff:')) {
             ip = ip.substring(7);
         }
         return ip;
     }
-
-}
+};
 
 module.exports = ServerUtils;
