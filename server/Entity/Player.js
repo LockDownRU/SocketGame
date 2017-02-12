@@ -32,10 +32,14 @@ class Player extends LiveEntity {
         this.nickname = null;
     }
 
-
-
     onTick() {
+        super.onTick();
 
+        console.log(this.Nickname + 'tick!');
+    }
+
+    onDie (source) {
+        console.log('Игрок [' + this.Nickname + '] умер.');
     }
 
     onConnect(socket) {
@@ -51,6 +55,15 @@ class Player extends LiveEntity {
     onDisconnect(socket) {
 
         console.log('Игрок [' + this.Nickname + '] отключился.');
+    }
+
+
+    generatePacket() {
+        let packet = super.generatePacket();
+
+        packet['nickname'] = this.Nickname;
+
+        return packet;
     }
 }
 

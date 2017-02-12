@@ -11,6 +11,23 @@ class Entity {
         this.width = 0;
         this.height = 0;
     }
+
+    onTick() {
+
+    }
+
+    generatePacket() {
+        let packet = {
+            id: this.id,
+            posX: this.posX,
+            posY: this.posY,
+            sprite: this.sprite,
+            width: this.width,
+            height: this.height
+        };
+
+        return packet;
+    }
 }
 
 module.exports = Entity;
