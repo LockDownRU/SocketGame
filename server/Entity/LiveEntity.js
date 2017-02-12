@@ -1,5 +1,5 @@
-let Server = require('../Server/Server').Server;
 let Entity = require('./Entity');
+let TickManager = require('../Server/TickManager');
 
 class LiveEntity extends Entity {
     constructor() {
@@ -33,8 +33,8 @@ class LiveEntity extends Entity {
     onTick() {
         super.onTick();
 
-        this.posX = this.posX + (this.movement.vX * (this.movement.speed / Server.tickrate));
-        this.posY = this.posY + (this.movement.vY * (this.movement.speed / Server.tickrate));
+        this.posX = this.posX + (this.movement.vX * (this.movement.speed / TickManager.tickrate));
+        this.posY = this.posY + (this.movement.vY * (this.movement.speed / TickManager.tickrate));
     }
 
     generatePacket() {

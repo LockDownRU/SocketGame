@@ -35,7 +35,6 @@ class Player extends LiveEntity {
     onTick() {
         super.onTick();
 
-        console.log(this.Nickname + 'tick!');
     }
 
     onDie (source) {

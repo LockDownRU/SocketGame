@@ -2,8 +2,9 @@ let express = require('express');
 let expressServer = express();
 let httpServer = require('http').Server(expressServer);
 let io = require('socket.io')(httpServer);
+
+global.Server = require('./Server/Server');
 let Player = require('./Entity/Player');
-let Server = require('./Server/Server').Server;
 
 expressServer.use(express.static('../public'));
 
@@ -12,12 +13,12 @@ httpServer.listen(serverPort, function () {
     console.log('Сервер запущен. *:' + serverPort);
 });
 
-Server.init();
+global.Server.init();
 
 // Принимаем подключения от клиентов
 io.on('connection', function (socket) {
     socket.player = new Player();
-    Server.addEntity(socket.player);
+    global.Server.addEntity(socket.player);
     socket.player.onConnect(socket);
 
     // Отключение клиента

@@ -1,3 +1,5 @@
+let TickManager = require('./TickManager');
+
 let Server = {
 
     globalEntityMap: new Map(),
@@ -11,23 +13,4 @@ let Server = {
     }
 };
 
-let TickManager = {
-
-    tickrate: 40,
-    tickTimer: null,
-
-    init: () => {
-        TickManager.tickTimer = setInterval(TickManager.serverTick, 1000 / this.tickrate);
-    },
-
-    serverTick: () => {
-        Server.globalEntityMap.forEach((entity, id, map) => {
-            entity.onTick();
-        });
-    }
-};
-
-module.exports = {
-    Server: Server,
-    TickManager: TickManager
-};
+module.exports = Server;
