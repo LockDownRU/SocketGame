@@ -1,11 +1,11 @@
 let MathUtils = require('../Utils/MathUtils');
-let GameUtils = require('../Utils/GameUtils');
+let IOUtils = require('../Utils/IOUtils');
 
 class Entity {
     constructor() {
         this.id = MathUtils.guid();
 
-        this.posX = 0.1;
+        this.posX = 0.0;
         this.posY = 0.0;
 
         this.sprite = 'bunny';
@@ -23,7 +23,7 @@ class Entity {
 
     onTick() {
         if (this.ttl === 0) {
-            GameUtils.despawnEntity(id);
+            IOUtils.despawnEntity(this.id);
         } else if (this.ttl > 0) {
             this.ttl--;
         }
