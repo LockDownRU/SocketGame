@@ -1,62 +1,73 @@
-//Aliases
-var Loader = PIXI.loader,
-    Texture = PIXI.Texture,
-    Sprite = PIXI.Sprite,
-    Resources = PIXI.loader.resources;
+// Алиасы
+let Texture = PIXI.Texture;
 
-var Game = {
+let Game = {
+
+    // PIXI
     renderer: undefined,
     stage: undefined,
+    gameCanvas: null,
+
+    // IO
     socket: Socket,
-    textInfo: undefined,
+
+    // ???
     keyboard: undefined,
     inputTimer: undefined,
-    gameCanvas: null,
-    effectTextures: { },
+    effectTextures: {},
 
+    // HTML
     UI: {
         nicknameBox: document.getElementById('nickname'),
         hpBar: {
             bar: document.getElementById("hpBar"),
             status: document.getElementById("hpStatus")
         },
+        textStatus: document.getElementById("textInfo")
     },
 
+    // Управляемый игрок
     player: {
         id: null
     },
 
+    // Список сущностей и текстур
     globalEntityMap: new Map(),
     globalTextureMap: new Map(),
 
-    textBindingList: { },
-    entityList: { },
+    // Камера
     camera: {
         id: null,
         x: 0,
-        y: 0
+        y: 0,
+        dx: 0,
+        dy: 0
     },
 
+
+    // Инициализация канваса (PIXI)
     init: function (element, backgroundColor) {
-        // HTML Canvas
+
+        // HTML Game Canvas
         this.gameCanvas = document.getElementById(element);
         if (this.gameCanvas === null) {
             throw "Invalid Element ID.";
         }
 
-        // Html Вывод текста
-        this.textInfo = document.getElementById("textInfo");
-        if (this.textInfo === null) {
-            throw "Element ID 'textInfo' not found.";
-        }
-
         // Инициализация PIXI
-        this.renderer = new PIXI.Application(Game.gameCanvas.clientWidth, Game.gameCanvas.clientHeight, {view: Game.gameCanvas, backgroundColor: backgroundColor}, false);
+        this.renderer = new PIXI.Application(Game.gameCanvas.clientWidth, Game.gameCanvas.clientHeight, {
+            view: Game.gameCanvas,
+            backgroundColor: backgroundColor
+        }, false);
+        this.stage = this.renderer.stage; // Алиас основного контейнера
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
-        // Контейнер для рисования
-        this.stage = this.renderer.stage;
+        // Динамическое изменение канваса игры
+        window.onresize = function () {
+            Game.renderer.renderer.resize(Game.gameCanvas.clientWidth, Game.gameCanvas.clientHeight);
+        };
 
+        // TODO: Перевести на новую версию
         // Инициализация клавиатуры и мышки
         Game.keyboard = {
             up: Key(87),
@@ -67,101 +78,19 @@ var Game = {
         };
         Mouse.init();
 
-        window.onresize = function () {
-            Game.renderer.renderer.resize(Game.gameCanvas.clientWidth, Game.gameCanvas.clientHeight);
-        };
+        // Подключение к серверу
+        Game.socket.init();
 
-        // Загрузка текстур
-        PIXI.loader
-            .add('spritesheet', 'image/mc.json')
-            .add("image/bunny.png")
-            .add("image/bullet.png")
-            .load(function () {
+        // TODO: Перевести на новую версию
+        // Отправка ввода
+        Game.inputTimer = setInterval(Game.inputLoop, 25);
 
-                // Эфекты
-                Game.effectTextures['explosion'] = [];
-                for (var i = 0; i < 26; i++) {
-                    var texture = PIXI.Texture.fromFrame('Explosion_Sequence_A ' + (i + 1) + '.png');
-                    Game.effectTextures['explosion'].push(texture);
-                }
-
-                // Сокет
-                Game.socket.init();
-
-                // Отправка ввода
-                Game.inputTimer = setInterval(Game.inputLoop, 25);
-
-                // Рендер
-                Game.renderer.ticker.add(Game.renderLoop);
-            });
-
+        // Рендер
+        Game.renderer.ticker.add(Game.renderLoop);
     },
 
     renderLoop: function (delta) {
 
-        // Камера
-        if (Game.camera.id !== null) {
-            if (Game.globalEntityMap.has(Game.camera.id)) {
-                Game.camera.x = Game.globalEntityMap.get(Game.camera.id).posX;
-                Game.camera.y = Game.globalEntityMap.get(Game.camera.id).posY;
-            }
-        }
-
-        Game.stage.pivot.x = Game.camera.x;
-        Game.stage.pivot.y = Game.camera.y;
-        Game.stage.position.x = Game.renderer.renderer.width / 2;
-        Game.stage.position.y = Game.renderer.renderer.height / 2;
-
-        // Ник и ХП
-        if (Game.player.id !== null){
-            if (Game.globalEntityMap.has(Game.player.id)){
-
-                let player = Game.globalEntityMap.get(Game.player.id);
-
-                let nickname = player.nickname;
-                if (Game.UI.nicknameBox.innerText !== nickname){
-                    Game.UI.nicknameBox.innerText = nickname;
-                }
-
-                let hp = player.hp;
-                if (Game.UI.hpBar.status.innerText !== hp.current + ' / ' + hp.max) {
-                    Game.UI.hpBar.status.innerText = hp.current;
-                    Game.UI.hpBar.bar.style.width = (100 / hp.max * hp.current) + '%';
-                }
-            }
-        }
-
-
-
-        for (var entityBindingId in Game.textBindingList) {
-            if (Game.textBindingList.hasOwnProperty(entityBindingId) &&
-                Game.entityList.hasOwnProperty(entityBindingId)) {
-                var text = Game.textBindingList[entityBindingId];
-                if (text.hasOwnProperty('renderText')) {
-                    if (text.renderText != null) {
-                        // Change text
-                        if (text.renderText.text != text.text) {
-                            text.renderText.text = text.text;
-                        }
-                    } else {
-                        // Add text
-                        text.renderText = new PIXI.Text(text.text);
-                        text.renderText.x = Game.entityList[entityBindingId].x;
-                        text.renderText.y = Game.entityList[entityBindingId].y;
-                        Game.stage.addChild(text.renderText);
-                    }
-                } else {
-                    // Add text
-                    text.renderText = new PIXI.Text(text.text);
-                    text.renderText.x = Game.entityList[entityBindingId].x;
-                    text.renderText.y = Game.entityList[entityBindingId].y;
-                    Game.stage.addChild(text.renderText);
-                }
-
-                text.renderText.x = Game.entityList[entityBindingId].x;
-                text.renderText.y = Game.entityList[entityBindingId].y;
-            }
-        }
 
 
     },

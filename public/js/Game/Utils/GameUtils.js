@@ -34,6 +34,11 @@ let GameUtils = {
         entity.PIXIContainer.y = entity.posY;
         Game.stage.addChild(entity.PIXIContainer);
 
+        if (entity.id === Game.player.id) {
+            GameUtils.updateCamera();
+            GameUtils.setUINickname(entity.nickname);
+            GameUtils.setUIHp(entity.hp);
+        }
 
         Game.globalEntityMap.set(entity.id, entity);
         console.log('Spawn ' + entity.id);
@@ -42,13 +47,129 @@ let GameUtils = {
     deleteEntityById: (id) => {
         Game.globalEntityMap.get(id).PIXIContainer.destroy({children: true});
         Game.globalEntityMap.delete(id);
+
+        if (id === Game.camera.id) {
+            GameUtils.updateCamera();
+        }
+
         console.log('Despawn ' + id);
     },
 
     updateEntity: (entity) => {
         if (Game.globalEntityMap.has(entity.id)) {
-            // TODO: Обновлять спрайт, ник и т.п.
 
+            let localEntity = Game.globalEntityMap.get(entity.id);
+            let playerSprite = localEntity.PIXIContainer.getChildAt(0);
+            let playerText = localEntity.PIXIContainer.getChildAt(1);
+
+
+            if (localEntity.id === Game.camera.id) {
+                if (entity.posX !== localEntity.posX || entity.posY !== localEntity.posY) {
+                    GameUtils.updateCamera();
+                }
+            }
+
+            if (localEntity.id === Game.player.id) {
+                if (entity.nickname !== localEntity.nickname) {
+                    GameUtils.setUINickname(entity.nickname);
+                }
+
+                if (entity.hp !== localEntity.hp) {
+                    GameUtils.setUIHp(entity.hp);
+                }
+            }
+
+            // Координаты
+            localEntity.PIXIContainer.x = entity.posX;
+            localEntity.PIXIContainer.y = entity.posY;
+            localEntity.posX = entity.posX;
+            localEntity.posY = entity.posY;
+
+            // Размер спрайта игрока
+            playerSprite.width = entity.width;
+            playerSprite.height = entity.height;
+            localEntity.width = entity.width;
+            localEntity.height = entity.height;
+
+            // Спрайт
+            if (localEntity.sprite !== entity.sprite) {
+                playerSprite.texture = new Texture.fromImage(entity.sprite);
+                localEntity.sprite = entity.sprite;
+            }
+
+            // Тип
+            localEntity.type = entity.type;
+
+            // Игрок
+            if (localEntity.type.includes('BasePlayer')) {
+                localEntity.nickname = entity.nickname;
+                if (localEntity.id === Game.player.id) {
+                    GameUtils.updateCamera();
+                }
+            }
+            if (localEntity.type.includes('BaseLiveEntity')) {
+                localEntity.hp = entity.hp;
+                localEntity.alive = entity.alive;
+                localEntity.PIXIContainer.visible = localEntity.alive;
+            }
+
+            // Текст
+            localEntity.text = entity.text;
+            playerText.text = localEntity.text.content.replace(/{(.*?)}/g, (_, match) => {
+                return new Function('entity', 'return entity.' + match)(localEntity);
+            });
+        }
+    },
+
+    bindCamera: (camera) => {
+        Game.camera.id = camera.id;
+        Game.camera.dx = camera.x;
+        Game.camera.dy = camera.y;
+        GameUtils.updateCamera();
+    },
+
+    updateCamera: () => {
+        if (Game.camera.id !== null) {
+            if (Game.globalEntityMap.has(Game.camera.id)) {
+                let player = Game.globalEntityMap.get(Game.camera.id);
+                if (player) {
+                    Game.camera.x = player.posX;
+                    Game.camera.y = player.posY;
+                }
+            } else {
+                Game.camera.x = Game.camera.dx;
+                Game.camera.x = Game.camera.dy;
+            }
+        } else {
+            Game.camera.x = Game.camera.dx;
+            Game.camera.x = Game.camera.dy;
+        }
+
+        Game.UI.textStatus.innerText = 'Online [x:' + Game.camera.x + ', y:' + Game.camera.y + ']';
+
+        Game.stage.pivot.x = Game.camera.x;
+        Game.stage.pivot.y = Game.camera.y;
+        Game.stage.position.x = Game.renderer.renderer.width / 2;
+        Game.stage.position.y = Game.renderer.renderer.height / 2;
+    },
+
+    setUIHp: (hp) => {
+        if (Game.UI.hpBar.status.innerText !== hp.current + ' / ' + hp.max) {
+            Game.UI.hpBar.status.innerText = hp.current + ' / ' + hp.max;
+            Game.UI.hpBar.bar.style.width = (100 / hp.max * hp.current) + '%';
+        }
+    },
+
+    setUINickname: (nickname) => {
+        if (Game.UI.nicknameBox.innerText !== nickname) {
+            Game.UI.nicknameBox.innerText = nickname;
+        }
+    },
+
+    clearEntityList: () => {
+        for (let i = Game.stage.children.length - 1; i >= 0; i--) {
+            Game.stage.children[i].destroy({children: true});
+            Game.stage.removeChild(Game.stage.children[i]);
         }
     }
 

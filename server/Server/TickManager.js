@@ -6,7 +6,7 @@ let TickManager = {
     tickTimer: null,
 
     init: () => {
-        TickManager.tickTimer = setInterval(TickManager.serverTick, 1000 / this.tickrate);
+        TickManager.tickTimer = setInterval(TickManager.serverTick, 1000 / TickManager.tickrate);
     },
 
     serverTick: () => {
