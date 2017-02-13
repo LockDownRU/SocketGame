@@ -8,7 +8,7 @@ class Entity {
         this.posX = 0.1;
         this.posY = 0.0;
 
-        this.sprite = null;
+        this.sprite = 'bunny';
         this.width = 0;
         this.height = 0;
 

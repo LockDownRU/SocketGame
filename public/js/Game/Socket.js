@@ -45,9 +45,9 @@ var Socket = {
         });
 
         this.socket.on('bindCamera', (packet) => {
-            Game.camera.id = packet.id;
-            Game.camera.x = packet.x;
-            Game.camera.y = packet.y;
+            Game.camera.id = packet.camera.id;
+            Game.camera.x = packet.camera.x;
+            Game.camera.y = packet.camera.y;
         });
 
         this.socket.on('spawnEntity', (packet) => {

@@ -5,8 +5,11 @@ class LiveEntity extends Entity {
     constructor() {
         super();
 
-        this.hp = 0;
-        this.alive = false;
+        this.hp = {
+            current: 1,
+            max: 10
+        };
+        this.alive = true;
         this.movement = {
             vX: 0.0,
             vY: 0.0,
@@ -19,9 +22,9 @@ class LiveEntity extends Entity {
             return;
         }
 
-        this.hp -= damage;
-        if (this.hp < 0) {
-            this.hp = 0;
+        this.hp.current -= damage;
+        if (this.hp.current < 0) {
+            this.hp.current = 0;
             this.onDie(source);
         }
     }

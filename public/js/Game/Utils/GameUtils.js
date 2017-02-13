@@ -9,8 +9,22 @@ let GameUtils = {
     },
 
     addEntity: (entity) => {
-        Game.globalEntityMap.set(entity.id, entity);
         // TODO: Создать PIXI контейнер со спрайтом игрока и ником и записать его в entity
+
+        entity.PIXIContainer = new PIXI.Container();
+
+        let entitySprite = new PIXI.Sprite.fromImage(entity.sprite);
+        entitySprite.x = 0;
+        entitySprite.y = 0;
+
+        entity.PIXIContainer.addChild(entitySprite);
+
+        entity.PIXIContainer.x = entity.posX;
+        entity.PIXIContainer.y = entity.posY;
+        Game.stage.addChild(entity.PIXIContainer);
+
+
+        Game.globalEntityMap.set(entity.id, entity);
         console.log('Spawn ' + entity.id);
     },
 
