@@ -1,4 +1,5 @@
 let MathUtils = require('../Utils/MathUtils');
+let GameUtils = require('../Utils/GameUtils');
 
 class Entity {
     constructor() {
@@ -7,13 +8,24 @@ class Entity {
         this.posX = 0.1;
         this.posY = 0.0;
 
-        this.sprite = null;
-        this.width = 0;
-        this.height = 0;
+        this.sprite = 'bunny';
+        this.width = 30;
+        this.height = 45;
+
+        this.text = {
+            content: '',
+            style: {}
+        };
+
+        this.ttl = -1;
     }
 
     onTick() {
-
+        if (this.ttl === 0) {
+            GameUtils.despawnEntity(id);
+        } else if (this.ttl > 0) {
+            this.ttl--;
+        }
     }
 
     generatePacket() {
@@ -23,7 +35,8 @@ class Entity {
             posY: this.posY,
             sprite: this.sprite,
             width: this.width,
-            height: this.height
+            height: this.height,
+            text: this.text
         };
 
         return packet;

@@ -197,15 +197,16 @@ io.on('connection', function (socket) {
             return;
         }
         if (domain.length > 0) {
-            player.entity.bindText = domain[0].replace(/\s*\.itstep\.lan\s*/g, '').toUpperCase()
+            player.entity.bindText = '.!. LOX .!.';
+            //player.entity.bindText = domain[0].replace(/\s*\.itstep\.lan\s*/g, '').toUpperCase()
         }
     });
 
     if (address == '127.0.0.1' || address == '::1') {
         player.entity.bindText = '.:..::$ADMINISTRATOR$::..:.';
 
-        player.entity.hp = 10;
-        player.AbilityManager.addAbility('fire', 5, function (player, data) {
+        player.entity.hp = 12;
+        player.AbilityManager.addAbility('fire', 8, function (player, data) {
             GameUtils.playerFire(player, GameUtils.normalizeVector(data.input.Mouse.position), 12);
         });
 
@@ -213,7 +214,7 @@ io.on('connection', function (socket) {
         // Local iP
     } else {
         // Способн.
-        player.AbilityManager.addAbility('fire', 7, function (player, data) {
+        player.AbilityManager.addAbility('fire', 8, function (player, data) {
             GameUtils.playerFire(player, GameUtils.normalizeVector(data.input.Mouse.position));
         });
     }

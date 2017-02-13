@@ -14,10 +14,20 @@ var Game = {
     gameCanvas: null,
     effectTextures: { },
 
-    hpBar: {
-        bar: document.getElementById("hpBar"),
-        status: document.getElementById("hpStatus")
+    UI: {
+        nicknameBox: document.getElementById('nickname'),
+        hpBar: {
+            bar: document.getElementById("hpBar"),
+            status: document.getElementById("hpStatus")
+        },
     },
+
+    player: {
+        id: null
+    },
+
+    globalEntityMap: new Map(),
+    globalTextureMap: new Map(),
 
     textBindingList: { },
     entityList: { },
@@ -88,12 +98,40 @@ var Game = {
     },
 
     renderLoop: function (delta) {
-        if (Game.camera.id !== null){
-            if (Game.entityList.hasOwnProperty(Game.camera.id)) {
-                Game.camera.x = Game.entityList[Game.camera.id].x;
-                Game.camera.y = Game.entityList[Game.camera.id].y;
+
+        // Камера
+        if (Game.camera.id !== null) {
+            if (Game.globalEntityMap.has(Game.camera.id)) {
+                Game.camera.x = Game.globalEntityMap.get(Game.camera.id).posX;
+                Game.camera.y = Game.globalEntityMap.get(Game.camera.id).posY;
             }
         }
+
+        Game.stage.pivot.x = Game.camera.x;
+        Game.stage.pivot.y = Game.camera.y;
+        Game.stage.position.x = Game.renderer.renderer.width / 2;
+        Game.stage.position.y = Game.renderer.renderer.height / 2;
+
+        // Ник и ХП
+        if (Game.player.id !== null){
+            if (Game.globalEntityMap.has(Game.player.id)){
+
+                let player = Game.globalEntityMap.get(Game.player.id);
+
+                let nickname = player.nickname;
+                if (Game.UI.nicknameBox.innerText !== nickname){
+                    Game.UI.nicknameBox.innerText = nickname;
+                }
+
+                let hp = player.hp;
+                if (Game.UI.hpBar.status.innerText !== hp.current + ' / ' + hp.max) {
+                    Game.UI.hpBar.status.innerText = hp.current;
+                    Game.UI.hpBar.bar.style.width = (100 / hp.max * hp.current) + '%';
+                }
+            }
+        }
+
+
 
         for (var entityBindingId in Game.textBindingList) {
             if (Game.textBindingList.hasOwnProperty(entityBindingId) &&
@@ -125,10 +163,6 @@ var Game = {
             }
         }
 
-        Game.stage.pivot.x = Game.camera.x;
-        Game.stage.pivot.y = Game.camera.y;
-        Game.stage.position.x = Game.renderer.renderer.width / 2;
-        Game.stage.position.y = Game.renderer.renderer.height / 2;
 
     },
 

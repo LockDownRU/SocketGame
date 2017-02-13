@@ -162,14 +162,19 @@ input[placeholder] {
 }
 
 .hpBar {
-    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
     width: 100%;
-    line-height: inherit;
-    color: #fff!important;
-    background-color: #4CAF50!important;
+    height: 100%;
+    background-color: #4CAF50;
 }
 
 .hpStatus {
-    text-align: center!important;
-    color: #fff!important;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    color: #4c372c;
+    line-height: 30px;
 }

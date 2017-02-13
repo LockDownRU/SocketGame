@@ -1,3 +1,5 @@
+let IOUtils = require('../Utils/IOUtils');
+
 let TickManager = {
 
     tickrate: 40,
@@ -11,6 +13,8 @@ let TickManager = {
         global.Server.globalEntityMap.forEach((entity, id, map) => {
             entity.onTick();
         });
+
+        IOUtils.clientEntityMapUpdate();
     }
 };
 

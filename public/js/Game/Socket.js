@@ -13,6 +13,55 @@ var Socket = {
             Game.textInfo.innerHTML = "Offline";
         });
 
+        // ----- ES6 Update ------
+
+        this.socket.on('clientRunUp', (packet) => {
+            let textureMap = packet.textureMap;
+            let entityMap = packet.entityMap;
+            let playerControlId = packet.playerControlId;
+
+            Object.keys(textureMap).map(function(key, index) {
+                let texture = textureMap[key];
+                PIXI.Texture.addTextureToCache(GameUtils.getTextureFromBase64(texture), key);
+            });
+
+
+            Object.keys(entityMap).map(function(key, index) {
+                let entity = entityMap[key];
+                GameUtils.addEntity(entity);
+            });
+
+            Game.player.id = playerControlId;
+        });
+
+        this.socket.on('clientEntityMapUpdate', (packet) => {
+            let entityMap = packet.entityMap;
+
+            Object.keys(entityMap).map(function(key, index) {
+                let entity = entityMap[key];
+
+                GameUtils.updateEntity(entity);
+            });
+        });
+
+        this.socket.on('bindCamera', (packet) => {
+            Game.camera.id = packet.camera.id;
+            Game.camera.x = packet.camera.x;
+            Game.camera.y = packet.camera.y;
+        });
+
+        this.socket.on('spawnEntity', (packet) => {
+            GameUtils.addEntity(packet);
+        });
+
+        this.socket.on('despawnEntity', (packet) => {
+            GameUtils.deleteEntityById(packet);
+        });
+
+
+
+        //
+
         this.socket.on('loadMap', function(map){
 
         });
@@ -22,9 +71,6 @@ var Socket = {
             Game.hpBar.status.innerHTML = HpUpdateInfo.hp  + ' HP';
         });
 
-        this.socket.on('bindCamera', function (entityBindInfo) {
-            Game.camera.id = entityBindInfo.id;
-        });
 
         this.socket.on('positionUpdate', function (data) {
             for (var i = 0; i < data.length; i++){
@@ -85,15 +131,6 @@ var Socket = {
             }
         });
 
-        this.socket.on('spawnEntity', function (entityInfo) {
-            addEntity(entityInfo);
-        });
-
-        this.socket.on('despawnEntity', function (entity) {
-            if (Game.entityList.hasOwnProperty(entity.entityId)){
-                removeEntity(entity.entityId);
-            }
-        });
 
         this.socket.on('spawnEffect', function (effect) {
 
