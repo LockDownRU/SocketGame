@@ -59,6 +59,8 @@ html, body {
     height: 100%;
     display: flex;
     flex-flow: column;
+    min-height: 480px;
+    min-width: 250px;
 }
 
 .label {
@@ -78,20 +80,40 @@ html, body {
 /*Nickname grid*/
 .nick-container {
     flex: 0 1 auto;
+    display: flex;
+    align-items: stretch;
     height: 50px;
 }
 
+.nick-title {
+    margin: auto 10px;
+}
+
 /*Online players grid*/
+
+
 .online-container {
     flex: 1 1 auto;
     max-height: 300px;
     display:flex;
+    flex-flow: column;
+}
+
+.title-item {
+    flex: 0 1 auto;
+    height: 30px;
+    margin: 10px 10px 0 10px;
+    display: flex;
+}
+
+.title-item span{
+    margin: 0;
 }
 
 .onlineBox {
     margin: 10px;
     background: black;
-    flex: 1 0 auto;
+    flex: 1 1 auto;
 }
 
 /*Chat grid*/
@@ -108,21 +130,23 @@ html, body {
 }
 
 .chatSendBox {
+    height: 28px;
     margin: 0 10px 10px 10px;
     flex: 0 1 auto;
-    display:flex;
+    display: flex;
+    flex-flow: row;
 }
 
-input[type=button] {
+.send-button {
     height: 28px;
     width: 28px;
     margin-left: 8px;
     background-image: url("images/send-button.png");
-    background-size: contain;
+    background-size: cover;
 }
-
 input[placeholder] {
     font-family: Play, serif;
+    width: 100%;
     font-weight: 600;
     font-size: 14pt;
     color: #999999;
