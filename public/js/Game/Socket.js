@@ -34,19 +34,31 @@ var Socket = {
             Game.player.id = playerControlId;
         });
 
-        this.socket.on('bindCamera', function (packet) {
+        this.socket.on('clientEntityMapUpdate', (packet) => {
+            let entityMap = packet.entityMap;
+
+            Object.keys(entityMap).map(function(key, index) {
+                let entity = entityMap[key];
+
+                GameUtils.updateEntity(entity);
+            });
+        });
+
+        this.socket.on('bindCamera', (packet) => {
             Game.camera.id = packet.id;
             Game.camera.x = packet.x;
             Game.camera.y = packet.y;
         });
 
-        this.socket.on('spawnEntity', function (packet) {
+        this.socket.on('spawnEntity', (packet) => {
             GameUtils.addEntity(packet);
         });
 
-        this.socket.on('despawnEntity', function (packet) {
+        this.socket.on('despawnEntity', (packet) => {
             GameUtils.deleteEntityById(packet);
         });
+
+
 
         //
 

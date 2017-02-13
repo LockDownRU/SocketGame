@@ -69,6 +69,17 @@ let IOCore = {
             return packet;
         },
 
+        clientEntityMapUpdate: () => {
+            let packet = {};
+            packet.entityMap = { };
+
+            global.Server.globalEntityMap.forEach((entity, id, map) => {
+                packet.entityMap[id] = entity.generatePacket();
+            });
+
+            return packet;
+        },
+
         bindCamera: (camera) => {
             // Привязать камеру к объекту или координатам
             let packet = { };

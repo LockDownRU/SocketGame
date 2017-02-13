@@ -21,6 +21,10 @@ let IOUtis = {
             global.Server.removeEntityById(id);
             global.IOCore.io.emit('despawnEntity', id);
         }
+    },
+
+    clientEntityMapUpdate: () => {
+        global.IOCore.io.emit('clientEntityMapUpdate', global.IOCore.Packet.clientEntityMapUpdate());
     }
 
 };
