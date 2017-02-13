@@ -14,6 +14,11 @@ var Game = {
     gameCanvas: null,
     effectTextures: { },
 
+    nicknameBox: null,
+    player: {
+        id: null
+    },
+
     globalEntityMap: new Map(),
     globalTextureMap: new Map(),
 
@@ -33,6 +38,7 @@ var Game = {
     init: function (element, backgroundColor) {
         // HTML Canvas
         this.gameCanvas = document.getElementById(element);
+        this.nicknameBox = document.getElementById('nickname');
         if (this.gameCanvas === null) {
             throw "Invalid Element ID.";
         }
@@ -133,6 +139,14 @@ var Game = {
         Game.stage.position.x = Game.renderer.renderer.width / 2;
         Game.stage.position.y = Game.renderer.renderer.height / 2;
 
+        if (Game.player.id !== null){
+            if (Game.globalEntityMap.has(Game.player.id)){
+                let nickname = Game.globalEntityMap.get(Game.player.id).nickname;
+                if (Game.nicknameBox.innerText !== nickname){
+                    Game.nicknameBox.innerText = nickname;
+                }
+            }
+        }
     },
 
     inputLoop: function () {

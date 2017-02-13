@@ -3,6 +3,9 @@ let expressServer = express();
 let httpServer = require('http').Server(expressServer);
 let Player = require('../Entity/Player');
 
+let IOUtils = require('../Utils/IOUtils');
+let GameUtils = require('../Utils/GameUtils');
+
 const serverPort = 80;
 
 let IOCore = {
@@ -29,26 +32,29 @@ let IOCore = {
     },
 
     onConnect: (socket) => {
-
-        socket.emit('clientRunUp', IOCore.Packet.clientRunUp());
-
         socket.player = new Player();
-        global.Server.addEntity(socket.player);
         socket.player.onConnect(socket);
+
+
+        IOUtils.clientRunUp(socket);
+        IOUtils.spawnEntity(socket.player);
+        IOUtils.bindCamera(socket, new GameUtils.Camera(socket.player.id));
+
     },
 
     onDisconnect: (socket) => {
         socket.player.onDisconnect(socket);
+        IOUtils.despawnEntity(socket.player.id);
     },
 
     Packet: {
-        clientRunUp: () => {
+        clientRunUp: (id) => {
             // Подгрузка текстур, сущностей и карты
-
             let packet = { };
 
             packet.textureMap = { };
             packet.entityMap = { };
+            packet.playerControlId = id;
 
             global.Server.globalTextureMap.forEach((texture, key, map) => {
                 packet.textureMap[key] = texture;
@@ -61,12 +67,15 @@ let IOCore = {
             // TODO: Подгрузка карты
 
             return packet;
-        }
-    },
+        },
 
-    Events: {
-        despawnEntity: (id) => {
+        bindCamera: (camera) => {
+            // Привязать камеру к объекту или координатам
+            let packet = { };
 
+            packet.camera = camera;
+
+            return packet;
         }
     }
 };

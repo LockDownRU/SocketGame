@@ -27,9 +27,16 @@ class Player extends LiveEntity {
     constructor() {
         super();
 
+        this.socket = null;
         this.ip = null;
         this.hostname = null;
-        this.nickname = null;
+        this.nickname = '.!.';
+
+        this.camera = {
+            target: null,
+            x: 0,
+            y: 0
+        };
     }
 
     onTick() {
@@ -42,6 +49,7 @@ class Player extends LiveEntity {
     }
 
     onConnect(socket) {
+        this.socket = socket;
         this.ip = ServerUtils.getClientIp(socket);
 
         ServerUtils.getClientHostname(this.ip, (ip) => {
@@ -53,6 +61,7 @@ class Player extends LiveEntity {
 
     onDisconnect(socket) {
 
+        this.socket = null;
         console.log('Игрок [' + this.Nickname + '] отключился.');
     }
 

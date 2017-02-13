@@ -18,19 +18,35 @@ var Socket = {
         this.socket.on('clientRunUp', (packet) => {
             let textureMap = packet.textureMap;
             let entityMap = packet.entityMap;
+            let playerControlId = packet.playerControlId;
 
             Object.keys(textureMap).map(function(key, index) {
                 let texture = textureMap[key];
                 PIXI.Texture.addTextureToCache(GameUtils.getTextureFromBase64(texture), key);
-                console.log(key);
             });
 
-            Object.keys(entityMap).map(function(id, entity) {
 
+            Object.keys(entityMap).map(function(key, index) {
+                let entity = entityMap[key];
+                GameUtils.addEntity(entity);
             });
 
+            Game.player.id = playerControlId;
         });
 
+        this.socket.on('bindCamera', function (packet) {
+            Game.camera.id = packet.id;
+            Game.camera.x = packet.x;
+            Game.camera.y = packet.y;
+        });
+
+        this.socket.on('spawnEntity', function (packet) {
+            GameUtils.addEntity(packet);
+        });
+
+        this.socket.on('despawnEntity', function (packet) {
+            GameUtils.deleteEntityById(packet);
+        });
 
         //
 
@@ -43,9 +59,6 @@ var Socket = {
             Game.hpBar.status.innerHTML = HpUpdateInfo.hp  + ' HP';
         });
 
-        this.socket.on('bindCamera', function (entityBindInfo) {
-            Game.camera.id = entityBindInfo.id;
-        });
 
         this.socket.on('positionUpdate', function (data) {
             for (var i = 0; i < data.length; i++){
@@ -106,15 +119,6 @@ var Socket = {
             }
         });
 
-        this.socket.on('spawnEntity', function (entityInfo) {
-            addEntity(entityInfo);
-        });
-
-        this.socket.on('despawnEntity', function (entity) {
-            if (Game.entityList.hasOwnProperty(entity.entityId)){
-                removeEntity(entity.entityId);
-            }
-        });
 
         this.socket.on('spawnEffect', function (effect) {
 
