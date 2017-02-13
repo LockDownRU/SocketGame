@@ -112,7 +112,7 @@ io.on('connection', function (socket) {
 
     // Игрок
     var player = {
-        entity: new Entity(socket.id, 'player', 0, 0, 26, 37, 0.5, 'image/bunny.png', socket),
+        entity: new Entity(socket.id, 'player', 0, 0, 26, 37, 3, 'image/bunny.png', socket),
 
         AbilityManager: {
 
@@ -183,6 +183,7 @@ io.on('connection', function (socket) {
 
     // Спавним игрока
     ServerUtils.spawnEntity(player.entity);
+    socket.emit('hpUpdate', {hp: player.entity.hp});
 
     // Name
     var address = socket.client.conn.remoteAddress;

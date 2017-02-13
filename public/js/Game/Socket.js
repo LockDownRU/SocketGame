@@ -18,13 +18,8 @@ var Socket = {
         });
 
         this.socket.on('hpUpdate', function (HpUpdateInfo) {
-
-            console.log('Hp: ' + HpUpdateInfo.hp);
-
-
-            var elem = document.getElementById("myBar");
-            elem.style.width = HpUpdateInfo.hp * 10 + '%';
-            document.getElementById("demo").innerHTML = HpUpdateInfo.hp  + ' hp';
+            Game.hpBar.bar.style.width = HpUpdateInfo.hp * 10 + '%';
+            Game.hpBar.status.innerHTML = HpUpdateInfo.hp  + ' HP';
         });
 
         this.socket.on('bindCamera', function (entityBindInfo) {
@@ -104,9 +99,6 @@ var Socket = {
 
             switch (effect.type) {
                 case 'explosion': {
-
-                    console.log('effect');
-
                     var explosion = new PIXI.extras.AnimatedSprite(Game.effectTextures['explosion']);
                     explosion.x = effect.x;
                     explosion.y = effect.y;

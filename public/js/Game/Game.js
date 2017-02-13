@@ -14,6 +14,11 @@ var Game = {
     gameCanvas: null,
     effectTextures: { },
 
+    hpBar: {
+        bar: document.getElementById("hpBar"),
+        status: document.getElementById("hpStatus")
+    },
+
     textBindingList: { },
     entityList: { },
     camera: {
@@ -22,12 +27,13 @@ var Game = {
         y: 0
     },
 
-    init: function (element, width, height, backgroundColor) {
+    init: function (element, backgroundColor) {
         // HTML Canvas
         this.gameCanvas = document.getElementById(element);
         if (this.gameCanvas === null) {
             throw "Invalid Element ID.";
         }
+
         // Html Вывод текста
         this.textInfo = document.getElementById("textInfo");
         if (this.textInfo === null) {
@@ -50,6 +56,10 @@ var Game = {
             shift: Key(16)
         };
         Mouse.init();
+
+        window.onresize = function () {
+            Game.renderer.renderer.resize(Game.gameCanvas.clientWidth, Game.gameCanvas.clientHeight);
+        };
 
         // Загрузка текстур
         PIXI.loader
@@ -138,4 +148,4 @@ var Game = {
 };
 
 
-Game.init('gameCanvas', window.innerWidth, window.innerHeight, 0xFFC1A4);
+Game.init('gameCanvas', 0xE9FFC7);

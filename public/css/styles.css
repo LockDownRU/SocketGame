@@ -27,15 +27,20 @@ html, body {
     height: 100%;
     width: 100%;
     overflow: hidden;
+    margin: 0;
+    background: #e9ffc7;
+}
+
+#game {
+    position: fixed;
+    left: 0;
+    width: 80%;
+    height: 100%;
 }
 
 #gameCanvas {
     width: 100%;
     height: 100%;
-}
-
-* {
-    margin: 0;
 }
 
 #textInfo {
@@ -45,23 +50,18 @@ html, body {
     padding: 0 300px 0 0;
 }
 
-#game {
-    float: left;
-    width: 100%;
-    height: 100%;
-    padding: 0 250px 0 0;
-}
 
-#chats {
+#chat {
     position: fixed;
     top: 0;
     right: 0;
-    width: 258px;
+    width: 20%;
     height: 100%;
-    overflow-y: scroll;
+    display: flex;
+    flex-flow: column;
 }
 
-.label-1 {
+.label {
     font-family: Play, serif;
     font-weight: 400;
     font-size: 30px;
@@ -69,131 +69,48 @@ html, body {
     margin: auto;
 }
 
-.item-1 {
+.item {
     background-color: #78B518;
-    border: 3pt outset #808080;
+    border: 4px outset #808080;
     border-radius: 10px;
 }
 
 /*Nickname grid*/
-.nick {
-    position: relative;
-    width: 250px;
+.nick-container {
+    flex: 0 1 auto;
     height: 50px;
-}
-
-.nick-title {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    height: 100%;
-}
-
-.nick-title span {
-    margin: auto 10px;
 }
 
 /*Online players grid*/
 .online-container {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    width: 250px;
-    min-height: 250px;
+    flex: 1 1 auto;
+    max-height: 300px;
+    display:flex;
 }
 
-.internal-online-container {
-    min-height: 230px;
-    width: 230px;
+.onlineBox {
     margin: 10px;
-}
-
-.title-item {
-    position: relative;
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.list-item {
-    position: relative;
-    min-height: 181px;
-    width: 226px;
-    background-color: #F0FFB3;
-    border: 2pt solid #808080;
-    overflow-y: auto;
-}
-
-.list-item ul {
-    padding: 5px;
-    margin: 0;
-    list-style-type: none;
-}
-
-.list-item ul li {
-    font-family: Play, serif;
-    font-size: 15px;
-    color: #808080;
-    padding: 1px 5px;
+    background: black;
+    flex: 1 0 auto;
 }
 
 /*Chat grid*/
 .chat-container {
-    position: relative;
-    width: 250px;
-    min-height: 316px;
+    flex-flow: column;
+    flex: 1 1 auto;
+    display:flex;
 }
 
-.internal-chat-container {
-    min-height: 296px;
-    width: 230px;
+.chatMessagesBox {
     margin: 10px;
+    background: black;
+    flex: 1 1 auto;
 }
 
-.message-list-item {
-    width: 226px;
-    min-height: 254px;
-    background-color: #F0FFB3;
-    border: 2pt solid #808080;
-    overflow-y: auto;
-}
-
-.message-list-item ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
-
-.not-your-message {
-    opacity: 20;
-    display: block;
-    width: 150px;
-    margin: 10px 60px 10px 8px;
-    background-color: #AED374;
-    border: 3pt solid #416803;
-}
-
-.your-message {
-    opacity: 0.75;
-    display: block;
-    width: 150px;
-    margin: 10px 8px 10px 60px;
-    background-color: #78B518;
-    border: 3pt solid #213402;
-}
-
-.message-container {
-    display: flex;
-    margin-top: 10px;
-    height: 28px;
-    width: 100%;
-}
-
-.message-input {
-    width: 190px;
-    height: 24px;
-    background-color: #F0FFB3;
-    border: 2pt solid #808080;
-    padding: 0;
+.chatSendBox {
+    margin: 0 10px 10px 10px;
+    flex: 0 1 auto;
+    display:flex;
 }
 
 input[type=button] {
@@ -211,54 +128,24 @@ input[placeholder] {
     color: #999999;
 }
 
-.msg-author {
-    padding: 1px 5px 0 2px;
-}
-
-.msg-author p {
-    font-family: Play, serif;
-    font-weight: 800;
-    font-size: 10pt;
-    color: #341E11;
-    margin: 0;
-}
-
-.msg-text {
-    padding: 0 1px 2px 5px;
-}
-
-.msg-text p {
-    font-family: Play, serif;
-    font-weight: 500;
-    font-size: 12pt;
-    color: #87644F;
-    margin: 0;
-}
-
-.w3-progress-container {
-    width: 100%; /*absolute*/
+.hpBarBlock {
+    position: absolute;
+    bottom: 20px;
+    left: 30%;
+    width: 40%;
     height: 30px;
     background-color: #f1f1f1;
 }
 
-.w3-progressbar {
+.hpBar {
     height: 100%;
-    position: absolute;
+    width: 100%;
     line-height: inherit;
-}
-
-.w3-green {
     color: #fff!important;
     background-color: #4CAF50!important;
-    height: 100%;
-    position: absolute;
-    line-height: inherit;
 }
 
-.w3-center {
+.hpStatus {
     text-align: center!important;
-}
-
-.w3-text-white {
     color: #fff!important;
 }
