@@ -44,6 +44,7 @@ class Player extends LiveEntity {
             x: 0,
             y: 0
         };
+        this.type.push('BasePlayer');
     }
 
     onTick() {

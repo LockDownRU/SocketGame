@@ -18,6 +18,7 @@ class Entity {
         };
 
         this.ttl = -1;
+        this.type = ['BaseEntity'];
     }
 
     onTick() {
@@ -36,7 +37,8 @@ class Entity {
             sprite: this.sprite,
             width: this.width,
             height: this.height,
-            text: this.text
+            text: this.text,
+            type: this.type
         };
 
         return packet;

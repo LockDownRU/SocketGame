@@ -6,7 +6,7 @@ class LiveEntity extends Entity {
         super();
 
         this.hp = {
-            current: 1,
+            current: 8,
             max: 10
         };
         this.alive = true;
@@ -19,6 +19,7 @@ class LiveEntity extends Entity {
             content: '',
             style: {}
         };
+        this.type.push('BaseLiveEntity');
     }
 
     onDamage(damage, source) {

@@ -47,8 +47,53 @@ let GameUtils = {
 
     updateEntity: (entity) => {
         if (Game.globalEntityMap.has(entity.id)) {
-            // TODO: Обновлять спрайт, ник и т.п.
 
+            let localEntity = Game.globalEntityMap.get(entity.id);
+            let playerSprite = localEntity.PIXIContainer.getChildAt(0);
+            let playerText = localEntity.PIXIContainer.getChildAt(1);
+
+            // Координаты
+            localEntity.PIXIContainer.x = entity.posX;
+            localEntity.PIXIContainer.y = entity.posY;
+            localEntity.posX = entity.posX;
+            localEntity.posY = entity.posY;
+
+            // Размер спрайта игрока
+            playerSprite.width = entity.width;
+            playerSprite.height = entity.height;
+            localEntity.width = entity.width;
+            localEntity.height = entity.height;
+
+            // Спрайт
+            if (localEntity.sprite !== entity.sprite) {
+                playerSprite.texture = new Texture.fromImage(entity.sprite);
+                localEntity.sprite = entity.sprite;
+            }
+
+            // Тип
+            localEntity.type = entity.type;
+            // Игрок
+            if (localEntity.type.includes('BasePlayer')) {
+                localEntity.nickname = entity.nickname;
+            }
+            if (localEntity.type.includes('BaseLiveEntity')) {
+                localEntity.hp = entity.hp;
+                localEntity.alive = entity.alive;
+                localEntity.PIXIContainer.visible = localEntity.alive;
+            }
+
+            // Текст
+            localEntity.text = entity.text;
+            playerText.text = localEntity.text.content.replace(/{(.*?)}/g, (_, match) => {
+                return new Function('entity', 'return entity.' + match)(localEntity);
+            });
+        }
+    },
+
+    clearEntityList: () => {
+        for (let i = Game.stage.children.length - 1; i >= 0; i--) {
+            Game.stage.children[i].destroy({children: true});
+            Game.stage.removeChild(Game.stage.children[i]);
         }
     }
 

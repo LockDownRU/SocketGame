@@ -26,6 +26,7 @@ var Socket = {
             });
 
 
+            GameUtils.clearEntityList();
             Object.keys(entityMap).map(function(key, index) {
                 let entity = entityMap[key];
                 GameUtils.addEntity(entity);
