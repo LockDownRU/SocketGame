@@ -9,8 +9,13 @@ class Entity {
         this.posY = 0.0;
 
         this.sprite = 'bunny';
-        this.width = 0;
-        this.height = 0;
+        this.width = 30;
+        this.height = 45;
+
+        this.text = {
+            content: '',
+            style: {}
+        };
 
         this.ttl = -1;
     }
@@ -30,7 +35,8 @@ class Entity {
             posY: this.posY,
             sprite: this.sprite,
             width: this.width,
-            height: this.height
+            height: this.height,
+            text: this.text
         };
 
         return packet;

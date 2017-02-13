@@ -30,7 +30,14 @@ class Player extends LiveEntity {
         this.socket = null;
         this.ip = null;
         this.hostname = null;
-        this.nickname = '.!.';
+        this.nickname = null;
+
+        this.text  = {
+            content: '{nickname}\n{hp.current} \\ {hp.max}',
+            style: {
+                align: 'center'
+            }
+        };
 
         this.camera = {
             target: null,

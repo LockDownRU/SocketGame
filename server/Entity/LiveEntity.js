@@ -14,7 +14,11 @@ class LiveEntity extends Entity {
             vX: 0.0,
             vY: 0.0,
             speed: 0.0
-        }
+        };
+        this.text = {
+            content: '',
+            style: {}
+        };
     }
 
     onDamage(damage, source) {
