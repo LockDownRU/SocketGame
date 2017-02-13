@@ -1,4 +1,5 @@
 let MathUtils = require('../Utils/MathUtils');
+let GameUtils = require('../Utils/GameUtils');
 
 class Entity {
     constructor() {
@@ -10,10 +11,16 @@ class Entity {
         this.sprite = null;
         this.width = 0;
         this.height = 0;
+
+        this.ttl = -1;
     }
 
     onTick() {
-
+        if (this.ttl === 0) {
+            GameUtils.despawnEntity(id);
+        } else if (this.ttl > 0) {
+            this.ttl--;
+        }
     }
 
     generatePacket() {

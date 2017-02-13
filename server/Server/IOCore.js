@@ -29,6 +29,9 @@ let IOCore = {
     },
 
     onConnect: (socket) => {
+
+        socket.emit('clientRunUp', IOCore.Packet.clientRunUp());
+
         socket.player = new Player();
         global.Server.addEntity(socket.player);
         socket.player.onConnect(socket);
@@ -36,6 +39,35 @@ let IOCore = {
 
     onDisconnect: (socket) => {
         socket.player.onDisconnect(socket);
+    },
+
+    Packet: {
+        clientRunUp: () => {
+            // Подгрузка текстур, сущностей и карты
+
+            let packet = { };
+
+            packet.textureMap = { };
+            packet.entityMap = { };
+
+            global.Server.globalTextureMap.forEach((texture, key, map) => {
+                packet.textureMap[key] = texture;
+            });
+
+            global.Server.globalEntityMap.forEach((entity, id, map) => {
+                packet.entityMap[id] = entity.generatePacket();
+            });
+
+            // TODO: Подгрузка карты
+
+            return packet;
+        }
+    },
+
+    Events: {
+        despawnEntity: (id) => {
+
+        }
     }
 };
 

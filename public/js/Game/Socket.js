@@ -13,6 +13,27 @@ var Socket = {
             Game.textInfo.innerHTML = "Offline";
         });
 
+        // ----- ES6 Update ------
+
+        this.socket.on('clientRunUp', (packet) => {
+            let textureMap = packet.textureMap;
+            let entityMap = packet.entityMap;
+
+            Object.keys(textureMap).map(function(key, index) {
+                let texture = textureMap[key];
+                PIXI.Texture.addTextureToCache(GameUtils.getTextureFromBase64(texture), key);
+                console.log(key);
+            });
+
+            Object.keys(entityMap).map(function(id, entity) {
+
+            });
+
+        });
+
+
+        //
+
         this.socket.on('loadMap', function(map){
 
         });

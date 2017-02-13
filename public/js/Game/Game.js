@@ -14,6 +14,9 @@ var Game = {
     gameCanvas: null,
     effectTextures: { },
 
+    globalEntityMap: new Map(),
+    globalTextureMap: new Map(),
+
     hpBar: {
         bar: document.getElementById("hpBar"),
         status: document.getElementById("hpStatus")

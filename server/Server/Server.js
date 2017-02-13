@@ -3,6 +3,7 @@ let TickManager = require('./TickManager');
 let Server = {
 
     globalEntityMap: new Map(),
+    globalTextureMap: new Map(),
 
     init: () => {
         TickManager.init();
@@ -10,6 +11,10 @@ let Server = {
 
     addEntity: (entity) => {
         Server.globalEntityMap.set(entity.id, entity);
+    },
+
+    addTexture: (key, texture) => {
+        Server.globalTextureMap.set(key, texture);
     }
 };
 
