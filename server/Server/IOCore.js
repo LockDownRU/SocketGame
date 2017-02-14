@@ -3,6 +3,7 @@ let expressServer = express();
 let httpServer = require('http').Server(expressServer);
 let Player = require('../Entity/Player');
 let message_history = [];
+let players_online = [];
 
 let IOUtils = require('../Utils/IOUtils');
 let GameUtils = require('../Utils/GameUtils');
@@ -30,17 +31,18 @@ let IOCore = {
 
     initEvents: (socket) => {
         class Message {
-            constructor(nick,text) {
+            constructor(nick,text, id) {
                 this.nick = nick;
                 this.text = text;
                 this.date = Date.now();
+                this.id = id;
             }
         }
 
         socket.emit('init chat', message_history);
 
         socket.on('chat message', function(msg){
-            let mes = new Message(socket.player.Nickname,msg);
+            let mes = new Message(socket.player.Nickname,msg, socket.player.id);
             message_history.push(mes);
             IOCore.io.emit('chat message', message_history);
         });
@@ -63,14 +65,17 @@ let IOCore = {
         socket.player = new Player();
         socket.player.onConnect(socket);
 
-
         IOUtils.clientRunUp(socket);
         IOUtils.spawnEntity(socket.player);
         IOUtils.bindCamera(socket, new GameUtils.Camera(socket.player.id));
-
+        socket.emit('addPlayers', players_online);
+        players_online.push(socket.player.id);
+        IOCore.io.emit('addPlayer', socket.player.id);
     },
 
     onDisconnect: (socket) => {
+        players_online.splice(players_online.indexOf(socket.player.id),1);
+        IOCore.io.emit('deletePlayer', socket.player.id);
         socket.player.onDisconnect(socket);
         IOUtils.despawnEntity(socket.player.id);
     },

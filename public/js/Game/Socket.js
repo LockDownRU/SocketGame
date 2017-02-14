@@ -63,6 +63,27 @@
             GameUtils.bindCamera(packet.camera);
         });
 
+        //Добавление игроков в список нового игрока
+        this.socket.on('addPlayers', function (ids) {
+            if (ids.length !== 0) {
+                ids.forEach(function (item) {
+                    let nick = Game.globalEntityMap.get(item).nickname;
+                    $("#onlineList").append('<li id="' + item + '">' + nick + '</li>');
+                });
+            }
+        });
+
+        //Добавление игрока в список
+        this.socket.on('addPlayer', function (id) {
+            let nick = Game.globalEntityMap.get(id).nickname;
+            $("#onlineList").append('<li id="'+ id +'">'+ nick +'</li>');
+        });
+
+        //Удаление игрока из списка
+        this.socket.on('deletePlayer', function (id) {
+            $("#" + id + "").remove();
+        });
+
         //Скролл
         let scroll = new IScroll('#wrapper', {
             mouseWheel: true,
@@ -72,12 +93,10 @@
         //Инициализация чата для нового игрока
         this.socket.on('init chat', function (messages) {
 
-            let nickname = Game.globalEntityMap.get(Game.player.id).nickname;
-
             if (messages.length !== 0) {
                 if ($("#msgs")[0].childNodes.length === 1) {
                     messages.forEach(function (item) {
-                        if (item.nick === nickname)
+                        if (item.id === Game.player.id)
                             $("#msgs").append('<li class="msg-1"><div class="author"><p>' + item.nick + '</p></div><div class="text"><p>'+ item.text +'</p></div></li>');
                         else
                             $("#msgs").append('<li class="msg-0"><div class="author"><p>' + item.nick + '</p></div><div class="text"><p>'+ item.text +'</p></div></li>');
@@ -86,7 +105,7 @@
             }
 
             let autoscroll = false;
-            if (scroll.y <= scroll.maxScrollY + 100){
+            if (scroll.y <= scroll.maxScrollY + 250){
                 autoscroll = true;
             }
             scroll.refresh();
@@ -101,13 +120,13 @@
             let msg = messages[messages.length-1];
             let nickname = Game.globalEntityMap.get(Game.player.id).nickname;
 
-            if (msg.nick === nickname)
+            if (msg.id === Game.player.id)
                 $("#msgs").append('<li class="msg-1"><div class="author"><p>' + msg.nick + '</p></div><div class="text"><p>'+ msg.text +'</p></div></li>');
             else
                 $("#msgs").append('<li class="msg-0"><div class="author"><p>' + msg.nick + '</p></div><div class="text"><p>'+ msg.text +'</p></div></li>');
 
             let autoscroll = false;
-            if (scroll.y <= scroll.maxScrollY + 100){
+            if (scroll.y <= scroll.maxScrollY + 250){
                 autoscroll = true;
             }
             scroll.refresh();

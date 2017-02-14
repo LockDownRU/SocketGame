@@ -34,7 +34,8 @@
     <div class="online-container item">
         <div class="title-item"><span class="label">Players online</span></div>
         <div class="onlineBox">
-            <!-- IScroll5 контейнер со списком игроков или какой-то свой блок -->
+            <ul id="onlineList" class="list-item">
+            </ul>
         </div>
     </div>
     <div class="chat-container item">
@@ -44,7 +45,7 @@
                 </ul>
             </div>
         </div>
-        <form class="message-container" action="javascript:void(0)"><!--Changed-->
+        <form class="message-container" action="javascript:void(0)">
             <div style="flex: 1 1 auto; padding-right: 4px;">
                 <input type="text" id="message" class="message-input" autocomplete="off" placeholder="Enter your message">
             </div>
