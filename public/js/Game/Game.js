@@ -2,6 +2,7 @@
 let Texture = PIXI.Texture;
 
 let Game = {
+    tickrate: 40,
 
     // PIXI
     renderer: undefined,
@@ -11,9 +12,11 @@ let Game = {
     // IO
     socket: Socket,
 
+    // Input
+    inputTimer: undefined,
+
     // ???
     keyboard: undefined,
-    inputTimer: undefined,
     effectTextures: {},
 
     // HTML
@@ -68,14 +71,7 @@ let Game = {
         };
 
         // TODO: Перевести на новую версию
-        // Инициализация клавиатуры и мышки
-        Game.keyboard = {
-            up: Key(87),
-            down: Key(83),
-            left: Key(65),
-            right: Key(68),
-            shift: Key(16)
-        };
+        Input.init();
         Mouse.init();
 
         // Подключение к серверу
@@ -83,7 +79,7 @@ let Game = {
 
         // TODO: Перевести на новую версию
         // Отправка ввода
-        Game.inputTimer = setInterval(Game.inputLoop, 25);
+        Game.inputTimer = setInterval(Game.inputLoop, 1000 / Game.tickrate);
 
         // Рендер
         Game.renderer.ticker.add(Game.renderLoop);
@@ -91,22 +87,10 @@ let Game = {
 
     renderLoop: function (delta) {
 
-
-
     },
 
     inputLoop: function () {
-        Socket.socket.emit('clientInput', {
-            left: Game.keyboard.left.isDown,
-            up: Game.keyboard.up.isDown,
-            right: Game.keyboard.right.isDown,
-            down: Game.keyboard.down.isDown,
-            shift: Game.keyboard.shift.isDown,
-            Mouse: {
-                isDown: Mouse.isDown,
-                position: Mouse.position
-            }
-        });
+        Game.socket.socket.emit('clientInput', Input.getInput());
     }
 };
 

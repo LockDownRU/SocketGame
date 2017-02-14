@@ -1,4 +1,4 @@
-let Socket = {
+ Socket = {
     socket: undefined,
 
     init: function () {
@@ -31,6 +31,8 @@ let Socket = {
                 let entity = entityMap[key];
                 GameUtils.addEntity(entity);
             });
+
+            Input.setupKeys(packet.inputReq);
 
             Game.player.id = playerControlId;
         });
