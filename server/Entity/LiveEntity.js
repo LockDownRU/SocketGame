@@ -13,7 +13,7 @@ class LiveEntity extends Entity {
         this.movement = {
             vX: 0.0,
             vY: 0.0,
-            speed: 0.0
+            speed: 1.0
         };
         this.text = {
             content: '',

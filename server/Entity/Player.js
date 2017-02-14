@@ -31,6 +31,12 @@ class Player extends LiveEntity {
         this.ip = null;
         this.hostname = null;
         this.nickname = null;
+        this.input = {
+            keyboard: new Map(),
+            mouse: {
+
+            }
+        };
 
         this.text  = {
             content: '{nickname}\n{hp.current} \\ {hp.max}',
@@ -50,6 +56,16 @@ class Player extends LiveEntity {
     onTick() {
         super.onTick();
 
+        let keyboard = this.input.keyboard;
+
+
+        if (keyboard.has(83)) {
+            if (keyboard.get(83) === true) {
+                this.movement.vX = 0.5;
+            } else {
+                this.movement.vX = 0;
+            }
+        }
     }
 
     onDie (source) {

@@ -32,6 +32,8 @@ let Socket = {
                 GameUtils.addEntity(entity);
             });
 
+            Input.setupKeys(packet.inputReq);
+
             Game.player.id = playerControlId;
         });
 

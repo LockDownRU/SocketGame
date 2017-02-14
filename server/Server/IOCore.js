@@ -29,6 +29,18 @@ let IOCore = {
 
     initEvents: (socket) => {
 
+        socket.on('clientInput', (packet) => {
+            let keyList = packet.keyboard;
+            let input = {};
+            try {
+                input.keyboard = new Map(packet.keyboard);
+                input.mouse = packet.mouse;
+            } catch (err) {
+                input.keyboard = new Map();
+                input.mouse = { };
+            }
+            socket.player.input = input;
+        });
     },
 
     onConnect: (socket) => {
@@ -63,6 +75,8 @@ let IOCore = {
             global.Server.globalEntityMap.forEach((entity, id, map) => {
                 packet.entityMap[id] = entity.generatePacket();
             });
+
+            packet.inputReq = [87, 83, 65, 68, 16];
 
             // TODO: Подгрузка карты
 
