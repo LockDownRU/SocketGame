@@ -9,7 +9,8 @@
     <script src="js/pixi/pixi.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-
+    <script src="js/iscroll.js"></script>
+    <script src="js/script.js"></script>
 </head>
 <body>
 
@@ -37,17 +38,20 @@
         </div>
     </div>
     <div class="chat-container item">
-        <div class="chatMessagesBox">
-            <!-- IScroll5 контейнер с автоматическим добавлением сообщений и прокруткой. Всё уже реализовано в SocketChat! -->
+        <div id="wrapper">
+            <div id="scroller">
+                <ul id="msgs">
+                </ul>
+            </div>
         </div>
-        <div class="chatSendBox">
+        <form class="message-container" action="javascript:void(0)"><!--Changed-->
             <div style="flex: 1 1 auto; padding-right: 4px;">
-                <input type="text" title="message" class="message-input" placeholder="Enter your message" autocomplete="off">
+                <input type="text" id="message" class="message-input" autocomplete="off" placeholder="Enter your message">
             </div>
             <div style="flex: 0 1 auto;">
-                <input type="button" class="send-button" >
+                <input type="button" id="sendButton" class="send-button" onclick="sendMessage()">
             </div>
-        </div>
+        </form>
     </div>
 </div>
 

@@ -2,6 +2,7 @@ let express = require('express');
 let expressServer = express();
 let httpServer = require('http').Server(expressServer);
 let Player = require('../Entity/Player');
+let message_history = [];
 
 let IOUtils = require('../Utils/IOUtils');
 let GameUtils = require('../Utils/GameUtils');
@@ -28,7 +29,21 @@ let IOCore = {
     },
 
     initEvents: (socket) => {
+        class Message {
+            constructor(nick,text) {
+                this.nick = nick;
+                this.text = text;
+                this.date = Date.now();
+            }
+        }
 
+        socket.emit('init chat', message_history);
+
+        socket.on('chat message', function(msg){
+            let mes = new Message(socket.player.Nickname,msg);
+            message_history.push(mes);
+            IOCore.io.emit('chat message', message_history);
+        });
     },
 
     onConnect: (socket) => {
