@@ -11,11 +11,14 @@ class Entity {
         this.sprite = 'bunny';
         this.width = 26;
         this.height = 37;
+        this.rotation = 0.0;
 
         this.text = {
             content: '',
             style: {}
         };
+
+        this.collisionEnabled = true;
 
         this.ttl = -1;
         this.type = ['BaseEntity'];
@@ -37,6 +40,7 @@ class Entity {
             sprite: this.sprite,
             width: this.width,
             height: this.height,
+            rotation: this.rotation,
             text: this.text,
             type: this.type
         };
