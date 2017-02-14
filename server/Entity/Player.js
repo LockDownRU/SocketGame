@@ -35,7 +35,11 @@ class Player extends LiveEntity {
         this.input = {
             keyboard: new Map(),
             mouse: {
-
+                isDown: false,
+                position: {
+                    x: 0,
+                    y: 0
+                }
             }
         };
 
@@ -88,6 +92,10 @@ class Player extends LiveEntity {
 
             this.movement.vX = vX;
             this.movement.vY = vY;
+        }
+
+        if (this.input.mouse.isDown === true) {
+            console.log(this.input.mouse.position.x + ' - ' + this.input.mouse.position.y)
         }
     }
 

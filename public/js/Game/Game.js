@@ -72,7 +72,6 @@ let Game = {
 
         // TODO: Перевести на новую версию
         Input.init();
-        Mouse.init();
 
         // Подключение к серверу
         Game.socket.init();

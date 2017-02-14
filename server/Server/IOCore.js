@@ -48,11 +48,19 @@ let IOCore = {
         });
 
         socket.on('clientInput', (packet) => {
+            function Mouse(isDown, x, y) {
+                this.isDown = isDown || false;
+                this.position = {
+                    x: x || 0,
+                    y: y || 0
+                }
+            }
+
             let keyList = packet.keyboard;
             let input = {};
             try {
                 input.keyboard = new Map(packet.keyboard);
-                input.mouse = packet.mouse;
+                input.mouse = new Mouse(packet.mouse.isDown, packet.mouse.position.x, packet.mouse.position.y);
             } catch (err) {
                 input.keyboard = new Map();
                 input.mouse = { };
