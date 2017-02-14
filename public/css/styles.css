@@ -59,6 +59,8 @@ html, body {
     height: 100%;
     display: flex;
     flex-flow: column;
+    min-height: 480px;
+    min-width: 258px;
 }
 
 .label {
@@ -78,20 +80,40 @@ html, body {
 /*Nickname grid*/
 .nick-container {
     flex: 0 1 auto;
+    display: flex;
+    align-items: stretch;
     height: 50px;
 }
 
+.nick-title {
+    margin: auto 10px;
+}
+
 /*Online players grid*/
+
+
 .online-container {
     flex: 1 1 auto;
     max-height: 300px;
     display:flex;
+    flex-flow: column;
+}
+
+.title-item {
+    flex: 0 1 auto;
+    height: 30px;
+    margin: 10px 10px 0 10px;
+    display: flex;
+}
+
+.title-item span{
+    margin: 0;
 }
 
 .onlineBox {
     margin: 10px;
     background: black;
-    flex: 1 0 auto;
+    flex: 1 1 auto;
 }
 
 /*Chat grid*/
@@ -101,28 +123,93 @@ html, body {
     display:flex;
 }
 
-.chatMessagesBox {
-    margin: 10px;
-    background: black;
+#wrapper {
+    position: relative;
+    /*height: 200px; Should be fixed*/
+    width: 92%;
+    margin: 10px 3.2%;
+    border: 2pt solid #808080;
+    background: #bad7a6;
+    overflow: hidden;
     flex: 1 1 auto;
 }
 
-.chatSendBox {
-    margin: 0 10px 10px 10px;
-    flex: 0 1 auto;
-    display:flex;
+#scroller {
+    position: absolute;
+    width: 100%;
 }
 
-input[type=button] {
+#scroller ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    text-align: left;
+}
+
+.msg-0 {
+    opacity: 0.75;
+    display: block;
+    height: auto;
+    margin: 10px 60px 10px 8px;
+    background-color: #AED374;
+    border: 3pt solid #416803;
+}
+
+.msg-1 {
+    opacity: 0.75;
+    display: block;
+    height: auto;
+    margin: 10px 8px 10px 60px;
+    background-color: #78B518;
+    border: 3pt solid #213402;
+}
+
+.author {
+    padding: 1px 5px 0 2px;
+}
+
+.author p {
+    font-family: Play, serif;
+    font-weight: 800;
+    font-size: 10pt;
+    color: #341E11;
+    margin: 0;
+    line-height: 14px;
+}
+
+.text {
+    padding: 0 1px 2px 5px;
+}
+
+.text p {
+    font-family: Play, serif;
+    font-weight: 500;
+    font-size: 12pt;
+    color: #87644F;
+    margin: 0;
+    line-height: 18px;
+}
+
+.message-container {
+     display: flex;
+     height: 28px;
+     width: 92%;
+     margin: 0 4% 10px 4%;
+     flex: 0 1 auto;
+     flex-flow: row;
+}
+
+.send-button {
     height: 28px;
     width: 28px;
     margin-left: 8px;
     background-image: url("images/send-button.png");
-    background-size: contain;
+    background-size: cover;
 }
-
-input[placeholder] {
+.message-input {
     font-family: Play, serif;
+    width: 100%;
     font-weight: 600;
     font-size: 14pt;
     color: #999999;

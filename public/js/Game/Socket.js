@@ -63,6 +63,59 @@
             GameUtils.bindCamera(packet.camera);
         });
 
+        //Скролл
+        let scroll = new IScroll('#wrapper', {
+            mouseWheel: true,
+            disablePointer: true
+        });
+
+        //Инициализация чата для нового игрока
+        this.socket.on('init chat', function (messages) {
+
+            let nickname = Game.globalEntityMap.get(Game.player.id).nickname;
+
+            if (messages.length !== 0) {
+                if ($("#msgs")[0].childNodes.length === 1) {
+                    messages.forEach(function (item) {
+                        if (item.nick === nickname)
+                            $("#msgs").append('<li class="msg-1"><div class="author"><p>' + item.nick + '</p></div><div class="text"><p>'+ item.text +'</p></div></li>');
+                        else
+                            $("#msgs").append('<li class="msg-0"><div class="author"><p>' + item.nick + '</p></div><div class="text"><p>'+ item.text +'</p></div></li>');
+                    });
+                }
+            }
+
+            let autoscroll = false;
+            if (scroll.y <= scroll.maxScrollY + 100){
+                autoscroll = true;
+            }
+            scroll.refresh();
+            if (autoscroll == true){
+                scroll.scrollTo(0, scroll.maxScrollY, 0);
+            }
+        });
+
+        //Обновление чата для всех игроков
+        this.socket.on('chat message', function (messages) {
+
+            let msg = messages[messages.length-1];
+            let nickname = Game.globalEntityMap.get(Game.player.id).nickname;
+
+            if (msg.nick === nickname)
+                $("#msgs").append('<li class="msg-1"><div class="author"><p>' + msg.nick + '</p></div><div class="text"><p>'+ msg.text +'</p></div></li>');
+            else
+                $("#msgs").append('<li class="msg-0"><div class="author"><p>' + msg.nick + '</p></div><div class="text"><p>'+ msg.text +'</p></div></li>');
+
+            let autoscroll = false;
+            if (scroll.y <= scroll.maxScrollY + 100){
+                autoscroll = true;
+            }
+            scroll.refresh();
+            if (autoscroll == true){
+                scroll.scrollTo(0, scroll.maxScrollY, 0);
+            }
+        });
+
 
         // TODO: Перевести на новую версию
         // Не исспользовать!
