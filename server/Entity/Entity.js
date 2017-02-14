@@ -9,8 +9,8 @@ class Entity {
         this.posY = 0.0;
 
         this.sprite = 'bunny';
-        this.width = 30;
-        this.height = 45;
+        this.width = 26;
+        this.height = 37;
 
         this.text = {
             content: '',

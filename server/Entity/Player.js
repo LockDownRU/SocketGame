@@ -1,5 +1,6 @@
 let LiveEntity = require('./LiveEntity');
 let ServerUtils = require('../Utils/ServerUtils');
+let MathUtils = require('../Utils/MathUtils');
 
 class Player extends LiveEntity {
 
@@ -59,12 +60,34 @@ class Player extends LiveEntity {
         let keyboard = this.input.keyboard;
 
 
-        if (keyboard.has(83)) {
-            if (keyboard.get(83) === true) {
-                this.movement.vX = 0.5;
-            } else {
-                this.movement.vX = 0;
+        if (keyboard.has(87) && keyboard.has(83) && keyboard.has(65) && keyboard.has(68)) {
+
+            let vX = 0;
+            let vY = 0;
+
+            if (keyboard.get(87) === true) {
+                vY -= 1.0;
             }
+
+            if (keyboard.get(83) === true) {
+                vY += 1.0;
+            }
+
+            if (keyboard.get(65) === true) {
+                vX -= 1.0;
+            }
+
+            if (keyboard.get(68) === true) {
+                vX += 1.0;
+            }
+
+            let normVec = MathUtils.normalize(vX, vY);
+
+            vX = normVec.vX;
+            vY = normVec.vY;
+
+            this.movement.vX = vX;
+            this.movement.vY = vY;
         }
     }
 

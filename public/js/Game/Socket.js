@@ -1,4 +1,4 @@
-let Socket = {
+ Socket = {
     socket: undefined,
 
     init: function () {
