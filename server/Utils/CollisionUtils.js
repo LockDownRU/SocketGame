@@ -7,7 +7,7 @@ let CollisionUtils = {
 
         global.Server.globalEntityMap.forEach((e2, id, map) => {
 
-            if (e1.collisionEnabled === true) {
+            if (e1.collisionEnabled === true && e1.id !== e2.id && e2.collisionEnabled === true) {
                 if (CollisionUtils.checkEntityCollision(e1, e2)) {
                     collisions.push(collisions);
                 }
@@ -15,6 +15,7 @@ let CollisionUtils = {
 
         });
 
+        return collisions;
     },
 
     checkEntityCollision: (e1, e2) => {
@@ -70,8 +71,9 @@ let CollisionUtils = {
         function vectorMultiplication(A, B, C) {
             return (B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y);
         }
+
         /*
-        Important Tips
+         Important Tips
          Bx-Ax=x1;By-Ay=y1
          Cx-Ax=x2;Cy-Ay=y2
 
