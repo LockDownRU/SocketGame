@@ -25,6 +25,18 @@ let IOUtis = {
 
     clientEntityMapUpdate: () => {
         global.IOCore.io.emit('clientEntityMapUpdate', global.IOCore.Packet.clientEntityMapUpdate());
+    },
+
+    spawnEffect: (x, y, effect) => {
+        global.IOCore.io.emit('spawnEffect', {
+            x: 0,
+            y: 0,
+            effect: effect,
+            animationSpeed: 1,
+            rotation: 1.0,
+            width: 50,
+            height: 50
+        });
     }
 
 };

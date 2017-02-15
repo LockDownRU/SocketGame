@@ -1,6 +1,10 @@
 let LiveEntity = require('./LiveEntity');
 let ServerUtils = require('../Utils/ServerUtils');
 let MathUtils = require('../Utils/MathUtils');
+let Ability = require('../Ability/Ability');
+let IOUtils = require('../Utils/IOUtils');
+let Bullet = require('./Custom/Bullet');
+let events = require('events');
 
 class Player extends LiveEntity {
 
@@ -36,6 +40,7 @@ class Player extends LiveEntity {
             keyboard: new Map(),
             mouse: {
                 isDown: false,
+                button: 1,
                 position: {
                     x: 0,
                     y: 0
@@ -56,9 +61,32 @@ class Player extends LiveEntity {
             y: 0
         };
         this.type.push('BasePlayer');
+
+        // Events
+        this.eventEmitter = new events.EventEmitter();
+
+        this.abilitiesMap = this.abilitiesInit(this.eventEmitter);
     }
 
-    onTick() {
+    abilitiesInit() {
+        let abilitiesMap = new Map();
+
+        // Abilities
+        abilitiesMap.set('fire', new Ability(0.1, (player) => {
+            let bullet = new Bullet(player.posX, player.posY, MathUtils.normalize(player.input.mouse.position.x, player.input.mouse.position.y));
+            IOUtils.spawnEntity(bullet);
+            IOUtils.spawnEffect(player.posX, player.posY, 'bunny')
+        }));
+
+
+        this.eventEmitter.on('mouseLeft', (tick, player) => {
+            player.abilitiesMap.get('fire').tryUse(tick, player);
+        });
+
+        return abilitiesMap;
+    }
+
+    onTick(tick) {
         super.onTick();
 
         let keyboard = this.input.keyboard;
@@ -95,9 +123,15 @@ class Player extends LiveEntity {
         }
 
         if (this.input.mouse.isDown === true) {
-            console.log(this.input.mouse.position.x + ' - ' + this.input.mouse.position.y)
+            if (this.input.mouse.button === 1) {
+                this.eventEmitter.emit('mouseLeft', tick, this)
+            } else if (this.input.mouse.button === 2) {
+                this.eventEmitter.emit('mouseRight', tick, this)
+            }
         }
     }
+
+
 
     onDie (source) {
         console.log('Игрок [' + this.Nickname + '] умер.');

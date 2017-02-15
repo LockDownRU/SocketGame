@@ -10,7 +10,6 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/iscroll.js"></script>
-    <script src="js/script.js"></script>
 </head>
 <body>
 
@@ -45,7 +44,7 @@
                 </ul>
             </div>
         </div>
-        <form class="message-container" action="javascript:void(0)">
+        <form class="message-container" id="messageForm" action="javascript:void(0)">
             <div style="flex: 1 1 auto; padding-right: 4px;">
                 <input type="text" id="message" class="message-input" autocomplete="off" placeholder="Enter your message">
             </div>
@@ -57,8 +56,8 @@
 </div>
 
 <script src="js/Game/Utils/GameUtils.js"></script>
+<script src="js/Game/Chat/Chat.js"></script>
 <script src="js/Game/Socket.js"></script>
-<script src="js/Game/Keyboard.js"></script>
 <script src="js/Game/Input.js"></script>
 <script src="js/Game/Game.js"></script>
 

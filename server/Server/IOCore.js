@@ -39,17 +39,17 @@ let IOCore = {
             }
         }
 
-        socket.emit('init chat', message_history);
-
+        // Chat
         socket.on('chat message', function(msg){
-            let mes = new Message(socket.player.Nickname,msg, socket.player.id);
-            message_history.push(mes);
-            IOCore.io.emit('chat message', message_history);
+            let message = new Message(socket.player.Nickname, msg, socket.player.id);
+            message_history.push(message);
+            IOCore.io.emit('chat message', message);
         });
 
         socket.on('clientInput', (packet) => {
-            function Mouse(isDown, x, y) {
+            function Mouse(isDown, button,  x, y) {
                 this.isDown = isDown || false;
+                this.button = button || 1;
                 this.position = {
                     x: x || 0,
                     y: y || 0
@@ -60,7 +60,7 @@ let IOCore = {
             let input = {};
             try {
                 input.keyboard = new Map(packet.keyboard);
-                input.mouse = new Mouse(packet.mouse.isDown, packet.mouse.position.x, packet.mouse.position.y);
+                input.mouse = new Mouse(packet.mouse.isDown, packet.mouse.button, packet.mouse.position.x, packet.mouse.position.y);
             } catch (err) {
                 input.keyboard = new Map();
                 input.mouse = { };
@@ -76,14 +76,17 @@ let IOCore = {
         IOUtils.clientRunUp(socket);
         IOUtils.spawnEntity(socket.player);
         IOUtils.bindCamera(socket, new GameUtils.Camera(socket.player.id));
-        socket.emit('addPlayers', players_online);
+
+        // Chat
+        socket.emit('init chat', message_history);
+        socket.emit('reload players', players_online);
         players_online.push(socket.player.id);
-        IOCore.io.emit('addPlayer', socket.player.id);
+        IOCore.io.emit('add player', socket.player.id);
     },
 
     onDisconnect: (socket) => {
         players_online.splice(players_online.indexOf(socket.player.id),1);
-        IOCore.io.emit('deletePlayer', socket.player.id);
+        IOCore.io.emit('delete player', socket.player.id);
         socket.player.onDisconnect(socket);
         IOUtils.despawnEntity(socket.player.id);
     },

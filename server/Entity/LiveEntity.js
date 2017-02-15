@@ -6,7 +6,7 @@ class LiveEntity extends Entity {
         super();
 
         this.hp = {
-            current: 8,
+            current: 10,
             max: 10
         };
         this.alive = true;
@@ -38,7 +38,7 @@ class LiveEntity extends Entity {
         this.alive = false;
     }
 
-    onTick() {
+    onTick(tick) {
         super.onTick();
 
         this.posX = this.posX + (this.movement.vX * (this.movement.speed / TickManager.tickrate));
