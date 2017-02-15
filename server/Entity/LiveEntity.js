@@ -38,7 +38,7 @@ class LiveEntity extends Entity {
         this.alive = false;
     }
 
-    onTick() {
+    onTick(tick) {
         super.onTick();
 
         this.posX = this.posX + (this.movement.vX * (this.movement.speed / TickManager.tickrate));

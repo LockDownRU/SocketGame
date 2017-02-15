@@ -24,7 +24,7 @@ class Entity {
         this.type = ['BaseEntity'];
     }
 
-    onTick() {
+    onTick(tick) {
         if (this.ttl === 0) {
             IOUtils.despawnEntity(this.id);
         } else if (this.ttl > 0) {
