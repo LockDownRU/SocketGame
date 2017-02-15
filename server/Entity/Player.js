@@ -75,6 +75,7 @@ class Player extends LiveEntity {
         abilitiesMap.set('fire', new Ability(0.1, (player) => {
             let bullet = new Bullet(player.posX, player.posY, MathUtils.normalize(player.input.mouse.position.x, player.input.mouse.position.y));
             IOUtils.spawnEntity(bullet);
+            IOUtils.spawnEffect(player.posX, player.posY, 'bunny')
         }));
 
 

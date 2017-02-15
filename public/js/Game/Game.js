@@ -15,10 +15,6 @@ let Game = {
     // Input
     inputTimer: undefined,
 
-    // ???
-    keyboard: undefined,
-    effectTextures: {},
-
     // HTML
     UI: {
         nicknameBox: document.getElementById('nickname'),
@@ -70,13 +66,11 @@ let Game = {
             Game.renderer.renderer.resize(Game.gameCanvas.clientWidth, Game.gameCanvas.clientHeight);
         };
 
-        // TODO: Перевести на новую версию
         Input.init();
 
         // Подключение к серверу
         Game.socket.init();
 
-        // TODO: Перевести на новую версию
         // Отправка ввода
         Game.inputTimer = setInterval(Game.inputLoop, 1000 / Game.tickrate);
 
