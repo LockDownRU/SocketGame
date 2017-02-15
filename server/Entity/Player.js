@@ -2,6 +2,8 @@ let LiveEntity = require('./LiveEntity');
 let ServerUtils = require('../Utils/ServerUtils');
 let MathUtils = require('../Utils/MathUtils');
 let Ability = require('../Ability/Ability');
+let IOUtils = require('../Utils/IOUtils');
+let Bullet = require('./Custom/Bullet');
 let events = require('events');
 
 class Player extends LiveEntity {
@@ -70,8 +72,9 @@ class Player extends LiveEntity {
         let abilitiesMap = new Map();
 
         // Abilities
-        abilitiesMap.set('fire', new Ability(1, (player) => {
-            console.log(new Date());
+        abilitiesMap.set('fire', new Ability(0.1, (player) => {
+            let bullet = new Bullet(player.posX, player.posY, MathUtils.normalize(player.input.mouse.position.x, player.input.mouse.position.y));
+            IOUtils.spawnEntity(bullet);
         }));
 
 

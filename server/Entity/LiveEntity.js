@@ -6,7 +6,7 @@ class LiveEntity extends Entity {
         super();
 
         this.hp = {
-            current: 8,
+            current: 10,
             max: 10
         };
         this.alive = true;

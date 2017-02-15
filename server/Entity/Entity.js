@@ -32,6 +32,10 @@ class Entity {
         }
     }
 
+    onCollide(entity) {
+
+    }
+
     generatePacket() {
         let packet = {
             id: this.id,
