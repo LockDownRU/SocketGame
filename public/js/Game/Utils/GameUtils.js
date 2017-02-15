@@ -16,6 +16,7 @@ let GameUtils = {
         entitySprite.y = 0;
         entitySprite.height = entity.height;
         entitySprite.width = entity.width;
+        entitySprite.rotation = entity.rotation;
         entitySprite.anchor.set(0.5);
         entity.PIXIContainer.addChild(entitySprite);
 
@@ -88,8 +89,11 @@ let GameUtils = {
             // Размер спрайта игрока
             playerSprite.width = entity.width;
             playerSprite.height = entity.height;
+            playerSprite.rotation = entity.rotation;
             localEntity.width = entity.width;
             localEntity.height = entity.height;
+            localEntity.rotation = entity.rotation;
+
 
             // Спрайт
             if (localEntity.sprite !== entity.sprite) {

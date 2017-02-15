@@ -63,7 +63,7 @@ let Game = {
             backgroundColor: backgroundColor
         }, false);
         this.stage = this.renderer.stage; // Алиас основного контейнера
-        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
 
         // Динамическое изменение канваса игры
         window.onresize = function () {
