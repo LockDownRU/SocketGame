@@ -68,14 +68,19 @@ let Game = {
 
         Input.init();
 
-        // Подключение к серверу
-        Game.socket.init();
+        PIXI.loader
+            .add('exp', 'image/anim/exp.json') // Animated Sprites
+            .add('newexp', 'image/anim/newexp.json') // Animated Sprites
+            .load(() => {
+                // Подключение к серверу
+                Game.socket.init();
 
-        // Отправка ввода
-        Game.inputTimer = setInterval(Game.inputLoop, 1000 / Game.tickrate);
+                // Отправка ввода
+                Game.inputTimer = setInterval(Game.inputLoop, 1000 / Game.tickrate);
 
-        // Рендер
-        Game.renderer.ticker.add(Game.renderLoop);
+                // Рендер
+                Game.renderer.ticker.add(Game.renderLoop);
+            });
     },
 
     renderLoop: function (delta) {

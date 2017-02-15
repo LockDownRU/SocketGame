@@ -68,14 +68,12 @@
         // TODO: Перевести на новую версию
         // Не исспользовать!
         this.socket.on('spawnEffect', (packet) => {
-
-            let effect = packet.effect;
-
-            let PIXIEffect = PIXI.extras.AnimatedSprite.fromImages(['bunny']);
+            let arr = Object.values(PIXI.loader.resources[packet.effect].textures);
+            let PIXIEffect = new PIXI.extras.AnimatedSprite(arr);
             PIXIEffect.anchor.set(0.5);
             PIXIEffect.loop = false;
             PIXIEffect.onComplete = () => {
-                //PIXIEffect.destroy();
+                PIXIEffect.destroy();
             };
 
             PIXIEffect.x = packet.x;
@@ -87,17 +85,6 @@
 
             Game.stage.addChild(PIXIEffect);
             PIXIEffect.play();
-
-            /*switch (effect.type) {
-                case 'explosion': {
-                    var explosion = new PIXI.extras.AnimatedSprite(Game.effectTextures['explosion']);
-                    explosion.anchor.set(0.5);
-                    explosion.rotation = Math.random() * Math.PI;
-                    explosion.scale.set(0.75 + Math.random() * 0.5);
-
-                    break;
-                }
-            }*/
         });
     }
 };

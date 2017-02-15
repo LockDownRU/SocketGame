@@ -27,15 +27,15 @@ let IOUtis = {
         global.IOCore.io.emit('clientEntityMapUpdate', global.IOCore.Packet.clientEntityMapUpdate());
     },
 
-    spawnEffect: (x, y, effect) => {
+    spawnEffect: (x, y, effect, width, height, animationSpeed, rotation) => {
         global.IOCore.io.emit('spawnEffect', {
-            x: 0,
-            y: 0,
+            x: x,
+            y: y,
             effect: effect,
-            animationSpeed: 1,
-            rotation: 1.0,
-            width: 50,
-            height: 50
+            animationSpeed: animationSpeed || 0.7,
+            rotation: rotation || Math.random() * Math.PI,
+            width: width || 150,
+            height: height || 150
         });
     }
 
