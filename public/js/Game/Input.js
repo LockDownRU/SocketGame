@@ -6,6 +6,7 @@ let Input = {
         keyborad: new Map(),
         mouse: {
             isDown: false,
+            button: 1,
             position: {
                 x: 0,
                 y: 0
@@ -34,20 +35,24 @@ let Input = {
 
         window.addEventListener('mousedown', function(event) {
             if (Input.target === event.target && Input.target === Game.gameCanvas) {
-                Input.onMouseDown();
+                Input.onMouseDown(event);
             }
             Input.target = event.target;
         }, false);
 
+        Game.gameCanvas.oncontextmenu = () => {
+            return false;
+        };
+
         Game.gameCanvas.onmouseup = (event) => {
             if (Input.input.mouse.isDown === true) {
-                Input.onMouseUp();
+                Input.onMouseUp(event);
             }
         };
 
         Game.gameCanvas.onmouseout = (event) => {
             if (Input.input.mouse.isDown === true) {
-                Input.onMouseUp();
+                Input.onMouseUp(event);
             }
         };
 
@@ -58,11 +63,22 @@ let Input = {
         };
     },
 
-    onMouseDown: () => {
+    onMouseDown: (event) => {
         Input.input.mouse.isDown = true;
+
+        if ('which' in event) {
+            if (event.which === 3) {
+                Input.input.mouse.button = 2;
+            } else {
+                Input.input.mouse.button = 1;
+            }
+        }
+        else if ('button' in event) {
+            Input.input.mouse.button = event.button == 2;
+        }
     },
 
-    onMouseUp: () => {
+    onMouseUp: (event) => {
         Input.input.mouse.isDown = false;
     },
 

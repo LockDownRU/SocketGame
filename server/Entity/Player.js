@@ -36,6 +36,7 @@ class Player extends LiveEntity {
             keyboard: new Map(),
             mouse: {
                 isDown: false,
+                button: 1,
                 position: {
                     x: 0,
                     y: 0
@@ -95,9 +96,11 @@ class Player extends LiveEntity {
         }
 
         if (this.input.mouse.isDown === true) {
-            console.log(this.input.mouse.position.x + ' - ' + this.input.mouse.position.y)
+            console.log(this.input.mouse.button + '} ' + this.input.mouse.position.x + ' - ' + this.input.mouse.position.y)
         }
     }
+
+
 
     onDie (source) {
         console.log('Игрок [' + this.Nickname + '] умер.');
