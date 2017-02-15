@@ -39,12 +39,11 @@ let IOCore = {
             }
         }
 
-        socket.emit('init chat', message_history);
-
+        // Chat
         socket.on('chat message', function(msg){
-            let mes = new Message(socket.player.Nickname,msg, socket.player.id);
-            message_history.push(mes);
-            IOCore.io.emit('chat message', message_history);
+            let message = new Message(socket.player.Nickname, msg, socket.player.id);
+            message_history.push(message);
+            IOCore.io.emit('chat message', message);
         });
 
         socket.on('clientInput', (packet) => {
@@ -76,14 +75,17 @@ let IOCore = {
         IOUtils.clientRunUp(socket);
         IOUtils.spawnEntity(socket.player);
         IOUtils.bindCamera(socket, new GameUtils.Camera(socket.player.id));
-        socket.emit('addPlayers', players_online);
+
+        // Chat
+        socket.emit('init chat', message_history);
+        socket.emit('reload players', players_online);
         players_online.push(socket.player.id);
-        IOCore.io.emit('addPlayer', socket.player.id);
+        IOCore.io.emit('add player', socket.player.id);
     },
 
     onDisconnect: (socket) => {
         players_online.splice(players_online.indexOf(socket.player.id),1);
-        IOCore.io.emit('deletePlayer', socket.player.id);
+        IOCore.io.emit('delete player', socket.player.id);
         socket.player.onDisconnect(socket);
         IOUtils.despawnEntity(socket.player.id);
     },
