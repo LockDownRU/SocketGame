@@ -63,7 +63,6 @@ class Player extends LiveEntity {
         };
         this.type.push('BasePlayer');
 
-        this.rotation = Math.random() * Math.PI;
 
         // Events
         this.eventEmitter = new events.EventEmitter();
@@ -104,11 +103,11 @@ class Player extends LiveEntity {
             let vY = 0;
 
             if (keyboard.get(87) === true) {
-                vY -= 1.0;
+                vY += 1.0;
             }
 
             if (keyboard.get(83) === true) {
-                vY += 1.0;
+                vY -= 1.0;
             }
 
             if (keyboard.get(65) === true) {

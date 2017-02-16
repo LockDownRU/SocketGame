@@ -10,7 +10,7 @@ class Entity {
 
         this.sprite = 'sq';
         this.width = 50;
-        this.height = 100;
+        this.height = 50;
         this.rotation = 0.0;
 
         this.text = {

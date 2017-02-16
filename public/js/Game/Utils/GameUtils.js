@@ -9,6 +9,8 @@ let GameUtils = {
     },
 
     addEntity: (entity) => {
+        entity.posY = -entity.posY;
+
         entity.PIXIContainer = new PIXI.Container();
 
         let entitySprite = new PIXI.Sprite.fromImage(entity.sprite);
@@ -57,6 +59,8 @@ let GameUtils = {
     },
 
     updateEntity: (entity) => {
+        entity.posY = -entity.posY;
+
         if (Game.globalEntityMap.has(entity.id)) {
 
             let localEntity = Game.globalEntityMap.get(entity.id);
@@ -149,7 +153,7 @@ let GameUtils = {
             Game.camera.x = Game.camera.dy;
         }
 
-        Game.UI.textStatus.innerText = 'Online [x:' + Game.camera.x + ', y:' + Game.camera.y + ']';
+        Game.UI.textStatus.innerText = 'Online [x:' + Game.camera.x + ', y:' + -Game.camera.y + ']';
 
         Game.stage.pivot.x = Game.camera.x;
         Game.stage.pivot.y = Game.camera.y;
