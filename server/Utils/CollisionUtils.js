@@ -9,7 +9,7 @@ let CollisionUtils = {
 
             if (e1.collisionEnabled === true && e1.id !== e2.id && e2.collisionEnabled === true) {
                 if (CollisionUtils.checkEntityCollision(e1, e2)) {
-                    collisions.push(collisions);
+                    collisions.push(e2.id);
                 }
             }
 

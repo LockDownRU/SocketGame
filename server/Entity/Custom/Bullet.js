@@ -1,4 +1,5 @@
 let LiveEntity = require('../LiveEntity');
+let IOUtils = require('../../Utils/IOUtils');
 
 class Bullet extends LiveEntity {
 
@@ -27,7 +28,8 @@ class Bullet extends LiveEntity {
     }
 
     onCollide(entity) {
-
+        IOUtils.spawnEffect(this.posX, this.posY, 'newexp');
+        entity.damage(1, 'Bullet');
     }
 
 }

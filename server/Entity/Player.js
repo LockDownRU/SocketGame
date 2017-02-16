@@ -3,6 +3,7 @@ let ServerUtils = require('../Utils/ServerUtils');
 let MathUtils = require('../Utils/MathUtils');
 let Ability = require('../Ability/Ability');
 let IOUtils = require('../Utils/IOUtils');
+let Chat = require('../Chat/Chat');
 let Bullet = require('./Custom/Bullet');
 let events = require('events');
 
@@ -77,7 +78,6 @@ class Player extends LiveEntity {
         abilitiesMap.set('fire', new Ability(0.1, (player) => {
             let bullet = new Bullet(player.posX, player.posY, MathUtils.normalize(player.input.mouse.position.x, player.input.mouse.position.y));
             IOUtils.spawnEntity(bullet);
-            IOUtils.spawnEffect(player.posX, player.posY, 'newexp')
         }));
 
 
@@ -89,10 +89,14 @@ class Player extends LiveEntity {
     }
 
     onTick(tick) {
+
+        if (this.alive === false) {
+            return;
+        }
+
         super.onTick();
 
         let keyboard = this.input.keyboard;
-
 
         if (keyboard.has(87) && keyboard.has(83) && keyboard.has(65) && keyboard.has(68)) {
 
@@ -133,10 +137,10 @@ class Player extends LiveEntity {
         }
     }
 
-
-
     onDie (source) {
+        super.onDie();
         console.log('Игрок [' + this.Nickname + '] умер.');
+        Chat.sendMessage('Server', 'Игрок [' + this.Nickname + '] умер.', '0');
     }
 
     onConnect(socket) {

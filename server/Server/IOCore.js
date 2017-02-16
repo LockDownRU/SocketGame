@@ -2,6 +2,7 @@ let express = require('express');
 let expressServer = express();
 let httpServer = require('http').Server(expressServer);
 let Player = require('../Entity/Player');
+let Chat = require('../Chat/Chat');
 let message_history = [];
 let players_online = [];
 
@@ -30,20 +31,10 @@ let IOCore = {
     },
 
     initEvents: (socket) => {
-        class Message {
-            constructor(nick,text, id) {
-                this.nick = nick;
-                this.text = text;
-                this.date = Date.now();
-                this.id = id;
-            }
-        }
 
         // Chat
         socket.on('chat message', function(msg){
-            let message = new Message(socket.player.Nickname, msg, socket.player.id);
-            message_history.push(message);
-            IOCore.io.emit('chat message', message);
+            Chat.onMessageReceive(socket, msg);
         });
 
         socket.on('clientInput', (packet) => {
@@ -78,15 +69,12 @@ let IOCore = {
         IOUtils.bindCamera(socket, new GameUtils.Camera(socket.player.id));
 
         // Chat
-        socket.emit('init chat', message_history);
-        socket.emit('reload players', players_online);
-        players_online.push(socket.player.id);
-        IOCore.io.emit('add player', socket.player.id);
+        Chat.onPlayerConnect(socket);
     },
 
     onDisconnect: (socket) => {
-        players_online.splice(players_online.indexOf(socket.player.id),1);
-        IOCore.io.emit('delete player', socket.player.id);
+        Chat.onPlayerDisconnect(socket);
+
         socket.player.onDisconnect(socket);
         IOUtils.despawnEntity(socket.player.id);
     },

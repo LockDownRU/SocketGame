@@ -19,15 +19,11 @@ let TickManager = {
 
         global.Server.globalEntityMap.forEach((entity, id, map) => {
             if (entity.collisionEnabled === true) {
-
                 let collisions = CollisionUtils.getEntityCollisions(entity);
-                if (collisions.length > 0) {
-                    console.log(entity.id);
-                } else {
-                    console.log('---');
-                }
+                collisions.forEach((entityid) => {
+                    entity.onCollide(global.Server.globalEntityMap.get(entityid));
+                });
             }
-
         });
 
 

@@ -37,6 +37,11 @@ let IOUtis = {
             width: width || 150,
             height: height || 150
         });
+    },
+
+    sendMessageToChat: (msg) => {
+        IOCore.io.emit('chat message', msg);
+        return msg;
     }
 
 };

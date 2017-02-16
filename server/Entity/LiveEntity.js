@@ -22,13 +22,13 @@ class LiveEntity extends Entity {
         this.type.push('BaseLiveEntity');
     }
 
-    onDamage(damage, source) {
-        if (!this.alive) {
+    damage(damage, source) {
+        if (this.alive === false) {
             return;
         }
 
         this.hp.current -= damage;
-        if (this.hp.current < 0) {
+        if (this.hp.current <= 0) {
             this.hp.current = 0;
             this.onDie(source);
         }
