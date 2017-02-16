@@ -10,7 +10,7 @@ class Kirill extends Player {
     }
 
     onDamage() {
-        return false;
+        return true;
     }
 }
 
