@@ -19,32 +19,9 @@ let CollisionUtils = {
     },
 
     checkEntityCollision: (e1, e2) => {
-        /*function AABB(entity) {
-         return {
-         x: entity.posX - entity.width / 2 ,
-         y: entity.posY -  entity.height / 2,
-         width : entity.width,
-         height: entity.height
-         };
-         }
 
-         for (let i = 0 ; i < this.collideIgnore.length; i++){
-         if (e.id.includes(this.collideIgnore[i])) {
-
-         }
-         }
-
-         let rect1 = AABB(this);
-         let rect2 = AABB(e);
-
-         return rect1.x < rect2.x + rect2.width &&
-         rect1.x + rect1.width > rect2.x &&
-         rect1.y < rect2.y + rect2.height &&
-         rect1.height + rect1.y > rect2.y;*/
-        let isCollide = false;
-
-        if (MathUtils.distance(e1.posX, e1.posY, e2.posX, e2.posY) > 100)
-            return isCollide;
+        if (MathUtils.distance(e1.posX, e1.posY, e2.posX, e2.posY) > Math.max(e1.width, e1.height, e2.width, e2.height)*2)
+            return false;
 
         class Point {
             constructor(x, y) {
@@ -54,22 +31,20 @@ let CollisionUtils = {
         }
 
         function getCollisionMap(x, y, w, h, alpha) {
-            let delta1 = alpha + Math.atan(w / h);
-            let x1 = Math.cos(delta1) * Math.hypot((w / 2), (h / 2));
-            let y1 = Math.sin(delta1) * Math.hypot((w / 2), (h / 2));
-            let delta2 = alpha - Math.atan(w / h);
-            let x2 = Math.cos(delta2) * Math.hypot((w / 2), (h / 2));
-            let y2 = Math.sin(delta2) * Math.hypot((w / 2), (h / 2));
-            return [
-                new Point(x + x1, y + y1),
-                new Point(x + x2, y + y2),
-                new Point(x - x1, y - y1),
-                new Point(x - x2, y - y2)
-            ];
-        }
-
-        function vectorMultiplication(A, B, C) {
-            return (B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y);
+            let arr = [];
+            let xi = undefined, yi = undefined;
+            for (let i = 0; i < 4; i++) {
+                if (i%2===0) {
+                    xi = x + Math.hypot((h / 2), (w / 2)) * Math.cos(alpha + 2 * Math.PI * i / 4 + Math.atan(h / w));
+                    yi = y + Math.hypot((h / 2), (w / 2)) * Math.sin(alpha + 2 * Math.PI * i / 4 + Math.atan(h / w));
+                }
+                else {
+                    xi = x + Math.hypot((h / 2), (w / 2)) * Math.cos(alpha + 2 * Math.PI * i / 4 + Math.atan(w / h));
+                    yi = y + Math.hypot((h / 2), (w / 2)) * Math.sin(alpha + 2 * Math.PI * i / 4 + Math.atan(w / h));
+                }
+                arr.push(new Point(xi,yi));
+            }
+            return arr;
         }
 
         /*
@@ -100,32 +75,87 @@ let CollisionUtils = {
          let vec_BC = new Point(model1.C.x-model1.B.x,model1.C.y-model1.B.y);
          let vec_CD = new Point(model1.D.x-model1.C.x,model1.D.y-model1.C.y);
          let vec_DA = new Point(model1.A.x-model1.D.x,model1.A.y-model1.D.y);
-         */
-        let model1 = getCollisionMap(e1.posX, e1.posY, e1.width, e1.height, e1.rotation);
-        let model2 = getCollisionMap(e2.posX, e2.posY, e2.width, e2.height, e2.rotation);
 
-        model2.forEach(function (item) {
-            if (vectorMultiplication(model1[0], model1[1], item) < 0 &&
-                vectorMultiplication(model1[1], model1[2], item) < 0 &&
-                vectorMultiplication(model1[2], model1[3], item) < 0 &&
-                vectorMultiplication(model1[3], model1[0], item) < 0 &&
-                isCollide === false
-            )
-                isCollide = true;
-        });
-        if (isCollide === true)
-            return true;
-        model1.forEach(function (item) {
-            if (
-                vectorMultiplication(model2[0], model2[1], item) < 0 &&
-                vectorMultiplication(model2[1], model2[2], item) < 0 &&
-                vectorMultiplication(model2[2], model2[3], item) < 0 &&
-                vectorMultiplication(model2[3], model2[0], item) < 0 &&
-                isCollide === false
-            )
-                isCollide = true;
-        });
-        return isCollide;
+         function vectorMultiplication(A, B, C) {
+         return (B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y);
+         }
+
+         for (let i = 0; i < model1.length; i++) {
+         let i1 = (i + 1) % model1.length;
+         let p1 = model1[i];
+         let p2 = model1[i1];
+         for (let j = 0; j < model2.length; j++) {
+         let j1 = (j + 1) % model2.length;
+         let m1 = model2[j];
+         let m2 = model2[j1];
+         if (vectorMultiplication(p1, p2, m2) * vectorMultiplication(p1, p2, m1) < 0 &&
+         vectorMultiplication(m1, m2, p2) * vectorMultiplication(m1, m2, p1) < 0)
+         return true;
+         }
+         }
+         return false;
+         */
+
+        let model1 = getCollisionMap(e1.posX, e1.posY, e1.width, e1.height, -e1.rotation);
+        let model2 = getCollisionMap(e2.posX, e2.posY, e2.width, e2.height, -e2.rotation);
+
+        function isUndefined(obj) {
+            return obj === undefined;
+        }
+
+        let polygons = [model1, model2];
+        let minA, maxA, projected, i, i1, j, minB, maxB;
+
+        for (i = 0; i < polygons.length; i++) {
+
+            // for each polygon, look at each edge of the polygon, and determine if it separates
+            // the two shapes
+            let polygon = polygons[i];
+            for (i1 = 0; i1 < polygon.length; i1++) {
+
+                // grab 2 vertices to create an edge
+                let i2 = (i1 + 1) % polygon.length;
+                let p1 = polygon[i1];
+                let p2 = polygon[i2];
+
+                // find the line perpendicular to this edge
+                let normal = {x: p2.y - p1.y, y: p1.x - p2.x};
+
+                minA = maxA = undefined;
+                // for each vertex in the first shape, project it onto the line perpendicular to the edge
+                // and keep track of the min and max of these values
+                for (j = 0; j < model1.length; j++) {
+                    projected = normal.x * model1[j].x + normal.y * model1[j].y;
+                    if (isUndefined(minA) || projected < minA) {
+                        minA = projected;
+                    }
+                    if (isUndefined(maxA) || projected > maxA) {
+                        maxA = projected;
+                    }
+                }
+
+                // for each vertex in the second shape, project it onto the line perpendicular to the edge
+                // and keep track of the min and max of these values
+                minB = maxB = undefined;
+                for (j = 0; j < model2.length; j++) {
+                    projected = normal.x * model2[j].x + normal.y * model2[j].y;
+                    if (isUndefined(minB) || projected < minB) {
+                        minB = projected;
+                    }
+                    if (isUndefined(maxB) || projected > maxB) {
+                        maxB = projected;
+                    }
+                }
+
+                // if there is no overlap between the projects, the edge we are looking at separates the two
+                // polygons, and we know there is no overlap
+                if (maxA < minB || maxB < minA) {
+                    //console.log("polygons don't intersect!");
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 };
 
