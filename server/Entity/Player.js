@@ -84,9 +84,28 @@ class Player extends LiveEntity {
             IOUtils.spawnEntity(bullet);
         }));
 
+        abilitiesMap.set('bigfire', new Ability(5, (player) => {
+            let bullet = new Bullet(
+                player.posX,
+                player.posY,
+                MathUtils.normalize(player.input.mouse.position.x, player.input.mouse.position.y),
+                200,
+                player.id,
+                200,
+                80,
+                10,
+                20,
+                true
+            );
+            IOUtils.spawnEntity(bullet);
+        }));
+
 
         this.eventEmitter.on('mouseLeft', (tick, player) => {
             player.abilitiesMap.get('fire').tryUse(tick, player);
+        });
+        this.eventEmitter.on('mouseRight', (tick, player) => {
+            player.abilitiesMap.get('bigfire').tryUse(tick, player);
         });
 
         return abilitiesMap;

@@ -44,7 +44,7 @@ let GameUtils = {
         }
 
         Game.globalEntityMap.set(entity.id, entity);
-        console.log('Spawn ' + entity.id);
+        //console.log('Spawn ' + entity.id);
     },
 
     deleteEntityById: (id) => {
@@ -55,7 +55,7 @@ let GameUtils = {
             GameUtils.updateCamera();
         }
 
-        console.log('Despawn ' + id);
+        //console.log('Despawn ' + id);
     },
 
     updateEntity: (entity) => {

@@ -3,7 +3,7 @@ let CollisionUtils = require('../Utils/CollisionUtils');
 
 let TickManager = {
 
-    tickrate: 40,
+    tickrate: 30,
     _tickTimer: null,
     _currentTick: 0,
 

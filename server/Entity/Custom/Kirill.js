@@ -1,17 +1,44 @@
 let Player = require('../Player');
+let Bullet = require('../Custom/Bullet');
+let Ability = require('../../Ability/Ability');
+let MathUtils = require('../../Utils/MathUtils');
+let IOUtils = require('../../Utils/IOUtils');
 
 class Kirill extends Player {
     constructor() {
         super();
+        this.sprite = "bulba";
+        this.hp.current = 1;
+        this.hp.max = 1;
+        this.height = 50;
+        this.width = 50;
+        this.movement.speed = 300;
+    }
 
-        this.hp.current = 1000;
-        this.hp.max = 1000;
-        this.height = 100;
-        this.width = 100;
+    abilitiesInit() {
+        let abilitiesMap = new Map();
+
+        // Abilities
+        abilitiesMap.set('fire', new Ability(0.0005, (player) => {
+            let bullet = new Bullet(
+                player.posX,
+                player.posY,
+                MathUtils.normalize(player.input.mouse.position.x, player.input.mouse.position.y),
+                800,
+                player.id);
+            IOUtils.spawnEntity(bullet);
+        }));
+
+
+        this.eventEmitter.on('mouseLeft', (tick, player) => {
+            player.abilitiesMap.get('fire').tryUse(tick, player);
+        });
+
+        return abilitiesMap;
     }
 
     onDamage() {
-        return true;
+        return false;
     }
 }
 

@@ -62,12 +62,12 @@ let IOCore = {
 
     onConnect: (socket) => {
 
-        if (ServerUtils.getClientIp(socket) === '::1') {
+        /*if (ServerUtils.getClientIp(socket) === '192.168.4.55' || ServerUtils.getClientIp(socket) === '::1') {
             socket.player = new KirillPlayer();
         } else {
             socket.player = new Player();
-        }
-
+        }*/
+        socket.player = new Player();
 
         socket.player.onConnect(socket);
 
