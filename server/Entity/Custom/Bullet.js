@@ -12,7 +12,7 @@ class Bullet extends LiveEntity {
         this.ttl = 100;
         this.posX = x;
         this.posY = y;
-        this.rotation = Math.atan2(vec.vY, vec.vX);
+        this.rotation = Math.atan2(-vec.vY, vec.vX);
 
         this.sprite = 'bullet';
         this.width = 64;

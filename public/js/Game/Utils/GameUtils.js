@@ -179,6 +179,28 @@ let GameUtils = {
             Game.stage.children[i].destroy({children: true});
             Game.stage.removeChild(Game.stage.children[i]);
         }
+    },
+
+    spawnEffect: (packet) => {
+        packet.y = -packet.y;
+
+        let arr = Object.values(PIXI.loader.resources[packet.effect].textures);
+        let PIXIEffect = new PIXI.extras.AnimatedSprite(arr);
+        PIXIEffect.anchor.set(0.5);
+        PIXIEffect.loop = false;
+        PIXIEffect.onComplete = () => {
+            PIXIEffect.destroy();
+        };
+
+        PIXIEffect.x = packet.x;
+        PIXIEffect.y = packet.y;
+        PIXIEffect.animationSpeed = packet.animationSpeed;
+        PIXIEffect.rotation = packet.rotation;
+        PIXIEffect.width = packet.width;
+        PIXIEffect.height = packet.height;
+
+        Game.stage.addChild(PIXIEffect);
+        PIXIEffect.play();
     }
 
 };

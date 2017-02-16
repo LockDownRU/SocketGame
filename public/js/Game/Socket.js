@@ -65,26 +65,9 @@
 
         Chat.initIO(this.socket);
 
-        // TODO: Перевести на новую версию
-        // Не исспользовать!
+        // Эффекты
         this.socket.on('spawnEffect', (packet) => {
-            let arr = Object.values(PIXI.loader.resources[packet.effect].textures);
-            let PIXIEffect = new PIXI.extras.AnimatedSprite(arr);
-            PIXIEffect.anchor.set(0.5);
-            PIXIEffect.loop = false;
-            PIXIEffect.onComplete = () => {
-                PIXIEffect.destroy();
-            };
-
-            PIXIEffect.x = packet.x;
-            PIXIEffect.y = packet.y;
-            PIXIEffect.animationSpeed = packet.animationSpeed;
-            PIXIEffect.rotation = packet.rotation;
-            PIXIEffect.width = packet.width;
-            PIXIEffect.height = packet.height;
-
-            Game.stage.addChild(PIXIEffect);
-            PIXIEffect.play();
+            GameUtils.spawnEffect(packet);
         });
     }
 };

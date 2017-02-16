@@ -43,7 +43,7 @@ let IOCore = {
                 this.button = button || 1;
                 this.position = {
                     x: x || 0,
-                    y: y || 0
+                    y: -y || 0
                 }
             }
 
