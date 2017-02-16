@@ -2,11 +2,11 @@ let express = require('express');
 let expressServer = express();
 let httpServer = require('http').Server(expressServer);
 let Player = require('../Entity/Player');
+let KirillPlayer = require('../Entity/Custom/Kirill');
 let Chat = require('../Chat/Chat');
-let message_history = [];
-let players_online = [];
 
 let IOUtils = require('../Utils/IOUtils');
+let ServerUtils = require('../Utils/ServerUtils');
 let GameUtils = require('../Utils/GameUtils');
 
 const serverPort = 80;
@@ -61,7 +61,14 @@ let IOCore = {
     },
 
     onConnect: (socket) => {
-        socket.player = new Player();
+
+        if (ServerUtils.getClientIp(socket) === '::1') {
+            socket.player = new KirillPlayer();
+        } else {
+            socket.player = new Player();
+        }
+
+
         socket.player.onConnect(socket);
 
         IOUtils.clientRunUp(socket);
