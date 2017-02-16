@@ -3,8 +3,10 @@ let IOUtils = require('../../Utils/IOUtils');
 
 class Bullet extends LiveEntity {
 
-    constructor(x, y, vec, speed) {
+    constructor(x, y, vec, speed, parentid) {
         super();
+
+        this.parentid = parentid || null;
 
         // E
         this.ttl = 100;
@@ -28,8 +30,18 @@ class Bullet extends LiveEntity {
     }
 
     onCollide(entity) {
+        if (entity.id === this.parentid) {
+            return;
+        }
+        if (entity.parentid === this.parentid && this.parentid !== null) {
+            return;
+        }
         IOUtils.spawnEffect(this.posX, this.posY, 'newexp');
-        entity.damage(1, 'Bullet');
+        entity.damage(1, {
+            id: this.parentid,
+            dieMessage: '{0} всадил пулю в голову {1}!'
+        });
+        IOUtils.despawnEntity(this.id);
     }
 
 }

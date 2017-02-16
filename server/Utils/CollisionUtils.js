@@ -7,7 +7,7 @@ let CollisionUtils = {
 
         global.Server.globalEntityMap.forEach((e2, id, map) => {
 
-            if (e1.collisionEnabled === true && e1.id !== e2.id && e2.collisionEnabled === true) {
+            if (e1.collisionEnabled === true && e2.alive !== false  && e1.id !== e2.id && e2.collisionEnabled === true) {
                 if (CollisionUtils.checkEntityCollision(e1, e2)) {
                     collisions.push(e2.id);
                 }

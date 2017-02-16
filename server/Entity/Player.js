@@ -76,7 +76,12 @@ class Player extends LiveEntity {
 
         // Abilities
         abilitiesMap.set('fire', new Ability(0.1, (player) => {
-            let bullet = new Bullet(player.posX, player.posY, MathUtils.normalize(player.input.mouse.position.x, player.input.mouse.position.y));
+            let bullet = new Bullet(
+                player.posX,
+                player.posY,
+                MathUtils.normalize(player.input.mouse.position.x, player.input.mouse.position.y),
+                400,
+                player.id);
             IOUtils.spawnEntity(bullet);
         }));
 
@@ -89,11 +94,6 @@ class Player extends LiveEntity {
     }
 
     onTick(tick) {
-
-        if (this.alive === false) {
-            return;
-        }
-
         super.onTick();
 
         let keyboard = this.input.keyboard;
@@ -140,7 +140,18 @@ class Player extends LiveEntity {
     onDie (source) {
         super.onDie();
         console.log('Игрок [' + this.Nickname + '] умер.');
-        Chat.sendMessage('Server', 'Игрок [' + this.Nickname + '] умер.', '0');
+
+        let killer = global.Server.globalEntityMap.get(source.id);
+        let killSource;
+        if (killer === undefined) {
+            killSource = '\\o/';
+        } else {
+            killSource = killer.Nickname || '\\o/';
+        }
+
+        let dieMsg = source.dieMessage.format(killSource, this.Nickname);
+
+        Chat.sendMessage('Server', dieMsg, '0');
     }
 
     onConnect(socket) {

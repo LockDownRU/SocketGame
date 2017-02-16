@@ -13,12 +13,14 @@ let TickManager = {
 
     serverTick: () => {
         global.Server.globalEntityMap.forEach((entity, id, map) => {
-            entity.onTick(TickManager._currentTick);
+            if (entity.alive !== false) {
+                entity.onTick(TickManager._currentTick);
+            }
         });
 
 
         global.Server.globalEntityMap.forEach((entity, id, map) => {
-            if (entity.collisionEnabled === true) {
+            if (entity.collisionEnabled === true && entity.alive !== false) {
                 let collisions = CollisionUtils.getEntityCollisions(entity);
                 collisions.forEach((entityid) => {
                     entity.onCollide(global.Server.globalEntityMap.get(entityid));

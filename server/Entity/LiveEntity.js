@@ -27,11 +27,17 @@ class LiveEntity extends Entity {
             return;
         }
 
-        this.hp.current -= damage;
-        if (this.hp.current <= 0) {
-            this.hp.current = 0;
-            this.onDie(source);
+        if (this.onDamage(damage, source) === true) {
+            this.hp.current -= damage;
+            if (this.hp.current <= 0) {
+                this.hp.current = 0;
+                this.onDie(source);
+            }
         }
+    }
+
+    onDamage(damage, source) {
+        return true;
     }
 
     onDie (source) {
