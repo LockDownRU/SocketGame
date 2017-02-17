@@ -3,20 +3,8 @@
     src: url(../fonts/10195.otf);/*перед скобками не должно быть пробелов*/
 }
 @font-face {/*подключаем свои шрифты*/
-    font-family: 'shrift2';/* 'даём сами имя шрифту'*/
-    src: url(../fonts/10406.ttf);/*перед скобками не должно быть пробелов*/
-}
-@font-face {/*подключаем свои шрифты*/
-    font-family: 'shrift3';/* 'даём сами имя шрифту'*/
-    src: url(../fonts/10200.ttf);/*перед скобками не должно быть пробелов*/
-}
-@font-face {/*подключаем свои шрифты*/
-    font-family: 'shrift4';/* 'даём сами имя шрифту'*/
-    src: url(../fonts/10053.ttf);/*перед скобками не должно быть пробелов*/
-}
-@font-face {/*подключаем свои шрифты*/
-    font-family: 'shrift5';/* 'даём сами имя шрифту'*/
-    src: url(../fonts/10401.otf);/*перед скобками не должно быть пробелов*/
+    font-family: 'MainFont';/* 'даём сами имя шрифту'*/
+    src: url(../fonts/Play-Regular.ttf);/*перед скобками не должно быть пробелов*/
 }
 
 ::-webkit-scrollbar {
@@ -61,10 +49,11 @@ html, body {
     flex-flow: column;
     min-height: 480px;
     min-width: 258px;
+    overflow-y: auto;
 }
 
 .label {
-    font-family: Play, serif;
+    font-family: MainFont, serif;
     font-weight: 400;
     font-size: 30px;
     color: #F2F2F2;
@@ -123,7 +112,7 @@ html, body {
 }
 
 .list-item li {
-    font-family: Play, serif;
+    font-family: MainFont, serif;
     font-size: 15px;
     color: #808080;
     padding: 1px 5px;
@@ -181,7 +170,7 @@ html, body {
 
 .author p {
     text-wrap: normal;
-    font-family: Play, serif;
+    font-family: MainFont, serif;
     font-weight: 800;
     font-size: 10pt;
     color: #341E11;
@@ -195,7 +184,7 @@ html, body {
 
 .text p {
     text-wrap: normal;
-    font-family: Play, serif;
+    font-family: MainFont, serif;
     font-weight: 500;
     font-size: 12pt;
     color: #87644F;
@@ -220,7 +209,7 @@ html, body {
     background-size: cover;
 }
 .message-input {
-    font-family: Play, serif;
+    font-family: MainFont, serif;
     width: 100%;
     font-weight: 600;
     font-size: 14pt;

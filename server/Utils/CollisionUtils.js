@@ -20,7 +20,7 @@ let CollisionUtils = {
 
     checkEntityCollision: (e1, e2) => {
 
-        if (MathUtils.distance(e1.posX, e1.posY, e2.posX, e2.posY) > Math.max(e1.width, e1.height, e2.width, e2.height)*2)
+        if (MathUtils.distance(e1.posX, e1.posY, e2.posX, e2.posY) > Math.max(e1.width, e1.height, e2.width, e2.height) * 2)
             return false;
 
         class Point {
@@ -34,7 +34,7 @@ let CollisionUtils = {
             let arr = [];
             let xi = undefined, yi = undefined;
             for (let i = 0; i < 4; i++) {
-                if (i%2===0) {
+                if (i % 2 === 0) {
                     xi = x + Math.hypot((h / 2), (w / 2)) * Math.cos(alpha + 2 * Math.PI * i / 4 + Math.atan(h / w));
                     yi = y + Math.hypot((h / 2), (w / 2)) * Math.sin(alpha + 2 * Math.PI * i / 4 + Math.atan(h / w));
                 }
@@ -42,10 +42,13 @@ let CollisionUtils = {
                     xi = x + Math.hypot((h / 2), (w / 2)) * Math.cos(alpha + 2 * Math.PI * i / 4 + Math.atan(w / h));
                     yi = y + Math.hypot((h / 2), (w / 2)) * Math.sin(alpha + 2 * Math.PI * i / 4 + Math.atan(w / h));
                 }
-                arr.push(new Point(xi,yi));
+                arr.push(new Point(xi, yi));
             }
             return arr;
         }
+
+        let model1 = getCollisionMap(e1.posX, e1.posY, e1.width, e1.height, -e1.rotation);
+        let model2 = getCollisionMap(e2.posX, e2.posY, e2.width, e2.height, -e2.rotation);
 
         /*
          Important Tips
@@ -95,10 +98,26 @@ let CollisionUtils = {
          }
          return false;
          */
+        function vectorMultiplication(A, B, C) {
+            return (B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y);
+        }
 
-        let model1 = getCollisionMap(e1.posX, e1.posY, e1.width, e1.height, -e1.rotation);
-        let model2 = getCollisionMap(e2.posX, e2.posY, e2.width, e2.height, -e2.rotation);
+        for (let i = 0; i < model1.length; i++) {
+            let i1 = (i + 1) % model1.length;
+            let p1 = model1[i];
+            let p2 = model1[i1];
+            for (let j = 0; j < model2.length; j++) {
+                let j1 = (j + 1) % model2.length;
+                let m1 = model2[j];
+                let m2 = model2[j1];
+                if (vectorMultiplication(p1, p2, m2) * vectorMultiplication(p1, p2, m1) < 0 &&
+                    vectorMultiplication(m1, m2, p2) * vectorMultiplication(m1, m2, p1) < 0)
+                    return true;
+            }
+        }
+        return false;
 
+        /*
         function isUndefined(obj) {
             return obj === undefined;
         }
@@ -150,12 +169,12 @@ let CollisionUtils = {
                 // if there is no overlap between the projects, the edge we are looking at separates the two
                 // polygons, and we know there is no overlap
                 if (maxA < minB || maxB < minA) {
-                    //console.log("polygons don't intersect!");
                     return false;
                 }
             }
         }
         return true;
+        */
     }
 };
 

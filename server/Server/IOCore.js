@@ -3,6 +3,7 @@ let expressServer = express();
 let httpServer = require('http').Server(expressServer);
 let Player = require('../Entity/Player');
 let KirillPlayer = require('../Entity/Custom/Kirill');
+let IlyaPlayer = require('../Entity/Custom/Ilya');
 let Chat = require('../Chat/Chat');
 
 let IOUtils = require('../Utils/IOUtils');
@@ -62,12 +63,11 @@ let IOCore = {
 
     onConnect: (socket) => {
 
-        /*if (ServerUtils.getClientIp(socket) === '192.168.4.55' || ServerUtils.getClientIp(socket) === '::1') {
-            socket.player = new KirillPlayer();
+        if (ServerUtils.getClientIp(socket) === '192.168.4.55' || ServerUtils.getClientIp(socket) === '::1') {
+            socket.player = new IlyaPlayer();
         } else {
             socket.player = new Player();
-        }*/
-        socket.player = new Player();
+        }
 
         socket.player.onConnect(socket);
 
