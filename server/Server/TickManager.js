@@ -12,25 +12,32 @@ let TickManager = {
     },
 
     serverTick: () => {
+
         global.Server.globalEntityMap.forEach((entity, id, map) => {
             if (entity.alive !== false) {
-                entity.onTick(TickManager._currentTick);
-            }
-        });
-
-
-        global.Server.globalEntityMap.forEach((entity, id, map) => {
-            if (entity.collisionEnabled === true && entity.alive !== false) {
-                let collisions = CollisionUtils.getEntityCollisions(entity);
+                let collisions = [];
+                if (entity.collisionEnabled === true) {
+                    collisions = CollisionUtils.getEntityCollisions(entity);
+                }
+                entity.collisions = collisions;
                 collisions.forEach((entityid) => {
                     entity.onCollide(global.Server.globalEntityMap.get(entityid));
                 });
             }
         });
 
+        global.Server.globalEntityMap.forEach((entity, id, map) => {
+            if (entity.alive !== false) {
+                entity.onTick(TickManager._currentTick);
+            }
+        });
+
+        global.Server.despawnList.forEach((entityid, index) => {
+            IOUtils.despawnEntity(entityid);
+        });
+        global.Server.despawnList = [];
 
         IOUtils.clientEntityMapUpdate();
-
         TickManager._currentTick++;
     }
 };

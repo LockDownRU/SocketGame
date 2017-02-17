@@ -5,6 +5,7 @@ let Ability = require('../Ability/Ability');
 let IOUtils = require('../Utils/IOUtils');
 let Chat = require('../Chat/Chat');
 let Bullet = require('./Custom/Bullet');
+let BigBullet = require('./Custom/BigBullet');
 let events = require('events');
 
 class Player extends LiveEntity {
@@ -79,23 +80,16 @@ class Player extends LiveEntity {
                 player.posX,
                 player.posY,
                 MathUtils.normalize(player.input.mouse.position.x, player.input.mouse.position.y),
-                400,
                 player.id);
             IOUtils.spawnEntity(bullet);
         }));
 
         abilitiesMap.set('bigfire', new Ability(5, (player) => {
-            let bullet = new Bullet(
+            let bullet = new BigBullet(
                 player.posX,
                 player.posY,
                 MathUtils.normalize(player.input.mouse.position.x, player.input.mouse.position.y),
-                200,
-                player.id,
-                200,
-                80,
-                10,
-                20,
-                true
+                player.id
             );
             IOUtils.spawnEntity(bullet);
         }));

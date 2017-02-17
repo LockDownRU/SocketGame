@@ -8,6 +8,8 @@ class Entity {
         this.posX = 0.0;
         this.posY = 0.0;
 
+        this.collisions = [];
+
         this.sprite = 'sq';
         this.width = 50;
         this.height = 50;

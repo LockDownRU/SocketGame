@@ -16,6 +16,10 @@ let IOUtis = {
         }
     },
 
+    addToDespawnList: (id) => {
+        global.Server.despawnList.push(id);
+    },
+
     despawnEntity: (id) => {
         if (global.Server.globalEntityMap.has(id)) {
             global.Server.removeEntityById(id);

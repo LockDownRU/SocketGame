@@ -1,33 +1,38 @@
 let LiveEntity = require('../LiveEntity');
 let IOUtils = require('../../Utils/IOUtils');
 
-class Bullet extends LiveEntity {
+class BigBullet extends LiveEntity {
 
     constructor(x, y, vec, parentid) {
         super();
 
-        // B
         this.parentid = parentid || null;
 
         // E
-        this.ttl = 140;
+        this.ttl = 400;
         this.posX = x;
         this.posY = y;
         this.rotation = Math.atan2(-vec.vY, vec.vX);
 
         this.sprite = 'bullet';
-        this.width = 50;
-        this.height = 16;
+        this.width = 100;
+        this.height = 32;
+        this.text  = {
+            content: '{hp.current}',
+            style: {
+                align: 'center'
+            }
+        };
 
         // LE
-        this.hp.current = 1;
-        this.hp.max = 1;
+        this.hp.current = 10;
+        this.hp.max = 10;
 
-        this.movement.speed = 400;
+        this.movement.speed = 200;
         this.movement.vX = vec.vX;
         this.movement.vY = vec.vY;
 
-        this.type.push('Bullet');
+        this.type.push('BigBullet');
     }
 
     onCollide(entity) {
@@ -38,25 +43,21 @@ class Bullet extends LiveEntity {
             return;
         }
 
-        entity.damage(1, {
+        entity.damage(2, {
             id: this.parentid,
             dieMessage: '{0} всадил пулю в голову {1}!'
         });
 
-        this.damage(this.hp.max);
-    }
-
-    onDamage(damage, source) {
-        super.onDamage(damage, source);
-        return true;
+        if (entity.type.includes('BasePlayer')) {
+            this.damage(this.hp.max);
+        }
     }
 
     onDie() {
         let expSize = Math.max(this.height, this.width);
-        IOUtils.spawnEffect(this.posX, this.posY, 'newexp', expSize, expSize);
+        IOUtils.spawnEffect(this.posX, this.posY, 'exp', expSize * 2, expSize * 2, 1);
         IOUtils.addToDespawnList(this.id);
     }
-
 }
 
-module.exports = Bullet;
+module.exports = BigBullet;

@@ -4,6 +4,7 @@ let Server = {
 
     globalEntityMap: new Map(),
     globalTextureMap: new Map(),
+    despawnList: [],
 
     init: () => {
         TickManager.init();
