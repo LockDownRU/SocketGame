@@ -11,19 +11,27 @@ let ChunkManager = {
 
 
     updateEntityChunk: (entity) => {
-        let chunk = ChunkManager.getChunkFromCoords(entity.posX, entity.posY);
+        let chunkCoords = ChunkManager.getChunkCoords(entity.posX, entity.posY);
 
-        if (entity.chunk === null) {
+        if (entity.chunk !== null) {
+            if (entity.chunk.cx === chunkCoords.cx && entity.chunk.cy === chunkCoords.cy) {
+                return; // Мы в нужном чанке
+            }
+        }
 
+        // Добавляем в нужный чанк
+    },
+
+    getChunkCoords: (x, y) => {
+        return {
+            cx: x >> 8,
+            cy: y >> 8
         }
     },
 
-
     getChunkFromCoords: (x, y) => {
-        let cx = x >> 8;
-        let cy = y >> 8;
-
-        return ChunkManager.getChunk(cx, cy);
+        let chunkCoords = ChunkManager.getChunkCoords(x, y);
+        return ChunkManager.getChunk(chunkCoords.cx, chunkCoords.cy);
     },
 
     getChunk: (cx, cy) => {
