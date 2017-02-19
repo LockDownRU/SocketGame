@@ -10,9 +10,12 @@ let ChunkManager = {
     },
 
 
-    updatePlayerChunk: (player) => {
-        // Переход игрока между чанками
+    updateEntityChunk: (entity) => {
+        let chunk = ChunkManager.getChunkFromCoords(entity.posX, entity.posY);
 
+        if (entity.chunk === null) {
+
+        }
     },
 
 

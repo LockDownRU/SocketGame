@@ -2,8 +2,13 @@
 
 class Chunk {
 
-    constructor() {
+    constructor(cx, cy) {
+
+        this.cx = cx;
+        this.cy = cy;
+
         this.entityList = [];
+
     }
 
     addEntity(id) {
