@@ -1,5 +1,6 @@
 global.Server = require('./Server/Server');
 global.IOCore = require('./Server/IOCore');
+global.ChunkManager = require('./Chunk/ChunkManager');
 
 if (!String.prototype.format) {
     String.prototype.format = function() {
@@ -12,6 +13,8 @@ if (!String.prototype.format) {
         });
     };
 }
+
+global.ChunkManager.init();
 
 global.Server.init();
 
