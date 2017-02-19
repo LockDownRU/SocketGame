@@ -11,9 +11,9 @@ class Ilya extends Player{
         this.sprite = "sonic";
         this.hp.current = 27;
         this.hp.max = 27;
-        this.height = 165;
-        this.width = 120;
-        this.movement.speed = 3600;
+        this.height = 110;
+        this.width = 80;
+        this.movement.speed = 1200;
     }
 
     abilitiesInit() {
@@ -25,8 +25,8 @@ class Ilya extends Player{
                 player.posX,
                 player.posY,
                 MathUtils.normalize(player.input.mouse.position.x, player.input.mouse.position.y),
-                2400,
-                player.id);
+                player.id,
+                1200);
             IOUtils.spawnEntity(bullet);
         }));
 

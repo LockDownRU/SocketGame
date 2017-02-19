@@ -10,9 +10,9 @@ class Entity {
 
         this.collisions = [];
 
-        this.sprite = 'sq';
-        this.width = 50;
-        this.height = 50;
+        this.sprite = 'bunny';
+        this.width = 39;
+        this.height = 55;
         this.rotation = 0.0;
 
         this.text = {

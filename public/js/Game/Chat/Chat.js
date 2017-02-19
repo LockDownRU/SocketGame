@@ -59,6 +59,17 @@ let Chat = {
         }
     },
 
+    getDate: (date) => {
+        let d = new Date(date);
+        let year = d.getFullYear(),
+            mnth = d.getMonth() < 10 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1,
+            day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate(),
+            hour = d.getHours() < 10 ? '0' + d.getHours() : d.getHours(),
+            min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes(),
+            sec = d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds();
+        return year + '-' + mnth + '-' + day + ' ' + hour + ':' + min + ':' + sec;
+    },
+
     initIO: (socket) => {
 
         //Добавление игроков в список
@@ -88,9 +99,9 @@ let Chat = {
 
             messages.forEach(function (message) {
                 if (message.id === Game.player.id)
-                    Chat.messagesList.append('<li class="msg-1"><div class="author"><p>' + message.nick + '</p></div><div class="text"><p>' + message.text + '</p></div></li>');
+                    Chat.messagesList.append('<li class="msg-1"><div class="author"><p>' + message.nick + '</p></div><div class="text"><p>' + message.text + '</p></div><div class="date"><p>' + Chat.getDate(message.date) + '</p></div></li>');
                 else
-                    Chat.messagesList.append('<li class="msg-0"><div class="author"><p>' + message.nick + '</p></div><div class="text"><p>' + message.text + '</p></div></li>');
+                    Chat.messagesList.append('<li class="msg-0"><div class="author"><p>' + message.nick + '</p></div><div class="text"><p>' + message.text + '</p></div><div class="date"><p>' + Chat.getDate(message.date) + '</p></div></li>');
             });
 
             Chat.refreshScroll();
@@ -99,9 +110,9 @@ let Chat = {
         //Обновление чата для всех игроков
         socket.on('chat message', function (message) {
             if (message.id === Game.player.id) {
-                Chat.addMessageToChat('<li class="msg-1"><div class="author"><p>' + message.nick + '</p></div><div class="text"><p>' + message.text + '</p></div></li>');
+                Chat.addMessageToChat('<li class="msg-1"><div class="author"><p>' + message.nick + '</p></div><div class="text"><p>' + message.text + '</p></div><div class="date"><p>' + Chat.getDate(message.date) + '</p></div></li>');
             } else {
-                Chat.addMessageToChat('<li class="msg-0"><div class="author"><p>' + message.nick + '</p></div><div class="text"><p>' + message.text + '</p></div></li>');
+                Chat.addMessageToChat('<li class="msg-0"><div class="author"><p>' + message.nick + '</p></div><div class="text"><p>' + message.text + '</p></div><div class="date"><p>' + Chat.getDate(message.date) + '</p></div></li>');
             }
         });
     }

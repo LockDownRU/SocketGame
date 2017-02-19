@@ -8,8 +8,10 @@ let CollisionUtils = {
         global.Server.globalEntityMap.forEach((e2, id, map) => {
 
             if (e1.collisionEnabled === true && e2.alive !== false  && e1.id !== e2.id && e2.collisionEnabled === true) {
-                if (CollisionUtils.checkEntityCollision(e1, e2)) {
+                let check = CollisionUtils.checkEntityCollision(e1, e2);
+                if (check.isCollide) {
                     collisions.push(e2.id);
+                    console.log(check.direction);
                 }
             }
 
@@ -32,16 +34,12 @@ let CollisionUtils = {
 
         function getCollisionMap(x, y, w, h, alpha) {
             let arr = [];
-            let xi = undefined, yi = undefined;
+            let xi, yi;
             for (let i = 0; i < 4; i++) {
-                if (i % 2 === 0) {
-                    xi = x + Math.hypot((h / 2), (w / 2)) * Math.cos(alpha + 2 * Math.PI * i / 4 + Math.atan(h / w));
-                    yi = y + Math.hypot((h / 2), (w / 2)) * Math.sin(alpha + 2 * Math.PI * i / 4 + Math.atan(h / w));
-                }
-                else {
-                    xi = x + Math.hypot((h / 2), (w / 2)) * Math.cos(alpha + 2 * Math.PI * i / 4 + Math.atan(w / h));
-                    yi = y + Math.hypot((h / 2), (w / 2)) * Math.sin(alpha + 2 * Math.PI * i / 4 + Math.atan(w / h));
-                }
+                let beta = 2 * Math.PI * i / 4;
+                let delta = (i%2===0) ? Math.atan(h / w) : Math.atan(w / h);
+                xi = x + Math.hypot((h / 2), (w / 2)) * Math.cos(alpha + beta + delta);
+                yi = y + Math.hypot((h / 2), (w / 2)) * Math.sin(alpha + beta + delta);
                 arr.push(new Point(xi, yi));
             }
             return arr;
@@ -112,7 +110,7 @@ let CollisionUtils = {
                 let m2 = model2[j1];
                 if (vectorMultiplication(p1, p2, m2) * vectorMultiplication(p1, p2, m1) < 0 &&
                     vectorMultiplication(m1, m2, p2) * vectorMultiplication(m1, m2, p1) < 0)
-                    return true;
+                    return {isCollide: true, direction: i};
             }
         }
         return false;

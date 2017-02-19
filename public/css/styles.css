@@ -154,6 +154,7 @@ html, body {
     margin: 10px 60px 10px 8px;
     background-color: #AED374;
     border: 3pt solid #416803;
+    height: auto;
 }
 
 .msg-1 {
@@ -162,6 +163,7 @@ html, body {
     margin: 10px 8px 10px 60px;
     background-color: #78B518;
     border: 3pt solid #213402;
+    height: auto;
 }
 
 .author {
@@ -169,7 +171,7 @@ html, body {
 }
 
 .author p {
-    text-wrap: normal;
+    word-wrap: normal;
     font-family: MainFont, serif;
     font-weight: 800;
     font-size: 10pt;
@@ -183,13 +185,27 @@ html, body {
 }
 
 .text p {
-    text-wrap: normal;
+    word-wrap: normal;
     font-family: MainFont, serif;
     font-weight: 500;
     font-size: 12pt;
     color: #87644F;
     margin: 0;
     line-height: 18px;
+}
+
+.date {
+    padding: 0px;
+}
+
+.date p {
+    font-family: MainFont, serif;
+    font-weight: 700;
+    font-size: 8pt;
+    color: #341e11;
+    margin: 0;
+    line-height: 12px;
+    text-align: right;
 }
 
 .message-container {

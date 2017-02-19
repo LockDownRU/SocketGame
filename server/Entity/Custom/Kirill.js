@@ -24,8 +24,8 @@ class Kirill extends Player {
                 player.posX,
                 player.posY,
                 MathUtils.normalize(player.input.mouse.position.x, player.input.mouse.position.y),
-                800,
-                player.id);
+                player.id,
+                800);
             IOUtils.spawnEntity(bullet);
         }));
 
