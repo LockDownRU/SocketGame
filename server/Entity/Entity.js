@@ -36,7 +36,7 @@ class Entity {
         }
     }
 
-    onCollide(entity) {
+    onCollide(entity, directionE1, directionE2) {
 
     }
 

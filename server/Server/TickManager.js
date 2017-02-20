@@ -27,7 +27,7 @@ let TickManager = {
                 }
                 entity.collisions = collisions;
                 collisions.forEach((collideInfo) => {
-                    entity.onCollide(global.Server.globalEntityMap.get(collideInfo.entityId), collideInfo.direction);
+                    entity.onCollide(global.Server.globalEntityMap.get(collideInfo.entityId), collideInfo.directionE1, collideInfo.directionE2);
                 });
             }
         });
