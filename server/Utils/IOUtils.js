@@ -1,3 +1,5 @@
+let Chunk = require('../Chunk/Chunk');
+
 let IOUtis = {
 
     bindCamera: (socket, camera) => {
@@ -22,6 +24,12 @@ let IOUtis = {
 
     despawnEntity: (id) => {
         if (global.Server.globalEntityMap.has(id)) {
+
+            let chunk = global.Server.globalEntityMap.get(id).chunk;
+            if (chunk instanceof Chunk) {
+                chunk.removeEntity(id);
+            }
+
             global.Server.removeEntityById(id);
             global.IOCore.io.emit('despawnEntity', id);
         }

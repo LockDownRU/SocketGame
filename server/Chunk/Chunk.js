@@ -22,6 +22,10 @@ class Chunk {
         if (index >= 0) {
             this.entityList.splice(index, 1);
         }
+
+        if (this.entityList.length === 0) {
+            global.ChunkManager.removeChunk(this);
+        }
     }
 
 }
