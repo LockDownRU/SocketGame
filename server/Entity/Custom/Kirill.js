@@ -7,12 +7,13 @@ let IOUtils = require('../../Utils/IOUtils');
 class Kirill extends Player {
     constructor() {
         super();
-        this.sprite = "bulba";
+        this.sprite = "sq";
         this.hp.current = 1;
         this.hp.max = 1;
-        this.height = 50;
-        this.width = 50;
+        this.height = 500;
+        this.width = 500;
         this.movement.speed = 300;
+        this.rotation = Math.PI / 4;
     }
 
     abilitiesInit() {
