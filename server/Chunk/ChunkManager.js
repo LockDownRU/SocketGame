@@ -86,6 +86,21 @@ let ChunkManager = {
         return ChunkManager.chunks.get(cx).get(cy);
     },
 
+    getNearbyEntities: (cx, cy) => {
+        let entityList = [];
+
+        for (let a = cx - 1; a <= cx + 1; a++) {
+            for (let b = cy + 1; b >= cy - 1; b--) {
+                let chunk = ChunkManager.getChunk(a, b);
+                if (chunk !== null) {
+                    entityList.push.apply(entityList, chunk.entityList);
+                }
+            }
+        }
+
+        return entityList;
+    },
+
     getLoadedChunks: () => {
         let cn = 0;
         ChunkManager.chunks.forEach((chunk) => {
