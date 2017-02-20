@@ -35,7 +35,7 @@ class BigBullet extends LiveEntity {
         this.type.push('BigBullet');
     }
 
-    onCollide(entity) {
+    onCollide(entity, direction) {
         if (entity.id === this.parentid) {
             return;
         }

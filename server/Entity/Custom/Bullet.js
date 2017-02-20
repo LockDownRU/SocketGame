@@ -30,7 +30,7 @@ class Bullet extends LiveEntity {
         this.type.push('Bullet');
     }
 
-    onCollide(entity) {
+    onCollide(entity, direction) {
         if (entity.id === this.parentid) {
             return;
         }
@@ -42,6 +42,8 @@ class Bullet extends LiveEntity {
             id: this.parentid,
             dieMessage: '{0} всадил пулю в голову {1}!'
         });
+
+        console.log(direction);
 
         this.damage(this.hp.max);
     }

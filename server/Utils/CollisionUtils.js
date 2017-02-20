@@ -18,8 +18,10 @@ let CollisionUtils = {
                 if (e1.collisionEnabled === true && e2.alive !== false && e1.id !== e2.id && e2.collisionEnabled === true) {
                     let check = CollisionUtils.checkEntityCollision(e1, e2);
                     if (check.isCollide === true) {
-                        collisions.push(e2.id);
-                        if (check.direction !== null) console.log(check.direction);
+                        collisions.push({
+                            entityId: e2.id,
+                            direction: check.direction
+                        });
                     }
                 }
 

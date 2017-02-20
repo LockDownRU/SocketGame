@@ -75,7 +75,7 @@ function Entity (id, type, posX, posY, width, height, speed, sprite, parent, vX,
         };
     };
 
-    this.onCollide = function (entity) {
+    this.onCollide = function (entity, direction) {
 
     };
 
