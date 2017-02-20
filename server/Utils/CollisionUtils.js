@@ -16,8 +16,10 @@ let CollisionUtils = {
                 let e2 = global.Server.globalEntityMap.get(eid);
 
                 if (e1.collisionEnabled === true && e2.alive !== false && e1.id !== e2.id && e2.collisionEnabled === true) {
-                    if (CollisionUtils.checkEntityCollision(e1, e2)) {
+                    let check = CollisionUtils.checkEntityCollision(e1, e2);
+                    if (check.isCollide === true) {
                         collisions.push(e2.id);
+                        if (check.direction !== null) console.log(check.direction);
                     }
                 }
 
@@ -123,7 +125,7 @@ let CollisionUtils = {
                     let m2 = modelk1[j1];
                     if (vectorMultiplication(p1, p2, m2) * vectorMultiplication(p1, p2, m1) < 0 &&
                         vectorMultiplication(m1, m2, p2) * vectorMultiplication(m1, m2, p1) < 0) {
-                        return true;
+                        return {isCollide: true, direction: i};
                     }
                 }
             }
@@ -142,11 +144,11 @@ let CollisionUtils = {
                         vectorMultiplication(modelk[1], modelk[2], modelk1[i]) > 0 &&
                         vectorMultiplication(modelk[2], modelk[3], modelk1[i]) > 0 &&
                         vectorMultiplication(modelk[3], modelk[0], modelk1[i]) > 0)
-                        return true;
+                        return {isCollide: true, direction: null};
                 }
             }
         }
-        return false;
+        return {isCollide: false, direction: null};
     }
 };
 
