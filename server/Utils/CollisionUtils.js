@@ -24,7 +24,6 @@ let CollisionUtils = {
             }
         });
 
-
         return collisions;
     },
 
@@ -108,79 +107,46 @@ let CollisionUtils = {
             return (B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y);
         }
 
-        for (let i = 0; i < model1.length; i++) {
-            let i1 = (i + 1) % model1.length;
-            let p1 = model1[i];
-            let p2 = model1[i1];
-            for (let j = 0; j < model2.length; j++) {
-                let j1 = (j + 1) % model2.length;
-                let m1 = model2[j];
-                let m2 = model2[j1];
-                if (vectorMultiplication(p1, p2, m2) * vectorMultiplication(p1, p2, m1) < 0 &&
-                    vectorMultiplication(m1, m2, p2) * vectorMultiplication(m1, m2, p1) < 0)
-                    return true;
+        let models = [model1,model2];
+
+        for (let k = 0; k < models.length; k++){
+            let k1 = (k + 1) % models.length;
+            let modelk = models[k];
+            let modelk1 = models[k1];
+            for (let i = 0; i < modelk.length; i++) {
+                let i1 = (i + 1) % modelk.length;
+                let p1 = modelk[i];
+                let p2 = modelk[i1];
+                for (let j = 0; j < modelk1.length; j++) {
+                    let j1 = (j + 1) % modelk1.length;
+                    let m1 = modelk1[j];
+                    let m2 = modelk1[j1];
+                    if (vectorMultiplication(p1, p2, m2) * vectorMultiplication(p1, p2, m1) < 0 &&
+                        vectorMultiplication(m1, m2, p2) * vectorMultiplication(m1, m2, p1) < 0) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        for (let k = 0; k < models.length; k++) {
+            let k1 = (k + 1) % models.length;
+            let modelk = models[k];
+            let modelk1 = models[k1];
+            for (let k = 0; k < models.length; k++){
+                let k1 = (k + 1) % models.length;
+                let modelk = models[k];
+                let modelk1 = models[k1];
+                for (let i = 0; i < modelk1.length; i++) {
+                    if (vectorMultiplication(modelk[0], modelk[1], modelk1[i]) > 0 &&
+                        vectorMultiplication(modelk[1], modelk[2], modelk1[i]) > 0 &&
+                        vectorMultiplication(modelk[2], modelk[3], modelk1[i]) > 0 &&
+                        vectorMultiplication(modelk[3], modelk[0], modelk1[i]) > 0)
+                        return true;
+                }
             }
         }
         return false;
-
-        /*
-        function isUndefined(obj) {
-            return obj === undefined;
-        }
-
-        let polygons = [model1, model2];
-        let minA, maxA, projected, i, i1, j, minB, maxB;
-
-        for (i = 0; i < polygons.length; i++) {
-
-            // for each polygon, look at each edge of the polygon, and determine if it separates
-            // the two shapes
-            let polygon = polygons[i];
-            for (i1 = 0; i1 < polygon.length; i1++) {
-
-                // grab 2 vertices to create an edge
-                let i2 = (i1 + 1) % polygon.length;
-                let p1 = polygon[i1];
-                let p2 = polygon[i2];
-
-                // find the line perpendicular to this edge
-                let normal = {x: p2.y - p1.y, y: p1.x - p2.x};
-
-                minA = maxA = undefined;
-                // for each vertex in the first shape, project it onto the line perpendicular to the edge
-                // and keep track of the min and max of these values
-                for (j = 0; j < model1.length; j++) {
-                    projected = normal.x * model1[j].x + normal.y * model1[j].y;
-                    if (isUndefined(minA) || projected < minA) {
-                        minA = projected;
-                    }
-                    if (isUndefined(maxA) || projected > maxA) {
-                        maxA = projected;
-                    }
-                }
-
-                // for each vertex in the second shape, project it onto the line perpendicular to the edge
-                // and keep track of the min and max of these values
-                minB = maxB = undefined;
-                for (j = 0; j < model2.length; j++) {
-                    projected = normal.x * model2[j].x + normal.y * model2[j].y;
-                    if (isUndefined(minB) || projected < minB) {
-                        minB = projected;
-                    }
-                    if (isUndefined(maxB) || projected > maxB) {
-                        maxB = projected;
-                    }
-                }
-
-                // if there is no overlap between the projects, the edge we are looking at separates the two
-                // polygons, and we know there is no overlap
-                if (maxA < minB || maxB < minA) {
-                    return false;
-                }
-            }
-        }
-        return true;
-        */
     }
 };
 
