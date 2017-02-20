@@ -43,7 +43,7 @@ class BigBullet extends LiveEntity {
             return;
         }
 
-        entity.damage(2, {
+        entity.damage(20, {
             id: this.parentid,
             dieMessage: '{0} всадил пулю в голову {1}!'
         });
