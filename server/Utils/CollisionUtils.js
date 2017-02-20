@@ -5,15 +5,25 @@ let CollisionUtils = {
     getEntityCollisions: (e1) => {
         let collisions = [];
 
-        global.Server.globalEntityMap.forEach((e2, id, map) => {
 
-            if (e1.collisionEnabled === true && e2.alive !== false  && e1.id !== e2.id && e2.collisionEnabled === true) {
-                if (CollisionUtils.checkEntityCollision(e1, e2)) {
-                    collisions.push(e2.id);
+        if (e1.chunk === null) {
+            return collisions;
+        }
+
+        let nearbyEntities = global.ChunkManager.getNearbyEntities(e1.chunk.cx, e1.chunk.cy);
+        nearbyEntities.forEach((eid) => {
+            if (global.Server.globalEntityMap.has(eid)) {
+                let e2 = global.Server.globalEntityMap.get(eid);
+
+                if (e1.collisionEnabled === true && e2.alive !== false && e1.id !== e2.id && e2.collisionEnabled === true) {
+                    if (CollisionUtils.checkEntityCollision(e1, e2)) {
+                        collisions.push(e2.id);
+                    }
                 }
+                
             }
-
         });
+
 
         return collisions;
     },
