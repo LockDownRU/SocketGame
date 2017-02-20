@@ -13,6 +13,12 @@ let TickManager = {
 
     serverTick: () => {
 
+        // Чанки
+        global.Server.globalEntityMap.forEach((entity) => {
+            global.ChunkManager.updateEntityChunk(entity);
+        });
+
+        // Коллизия
         global.Server.globalEntityMap.forEach((entity, id, map) => {
             if (entity.alive !== false) {
                 let collisions = [];
@@ -26,6 +32,7 @@ let TickManager = {
             }
         });
 
+        // Тики
         global.Server.globalEntityMap.forEach((entity, id, map) => {
             if (entity.alive !== false) {
                 entity.onTick(TickManager._currentTick);

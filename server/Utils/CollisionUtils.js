@@ -5,17 +5,25 @@ let CollisionUtils = {
     getEntityCollisions: (e1) => {
         let collisions = [];
 
-        global.Server.globalEntityMap.forEach((e2, id, map) => {
 
-            if (e1.collisionEnabled === true && e2.alive !== false  && e1.id !== e2.id && e2.collisionEnabled === true) {
-                let check = CollisionUtils.checkEntityCollision(e1, e2);
-                if (check.isCollide) {
-                    collisions.push(e2.id);
-                    console.log(check.direction);
+        if (e1.chunk === null) {
+            return collisions;
+        }
+
+        let nearbyEntities = global.ChunkManager.getNearbyEntities(e1.chunk.cx, e1.chunk.cy);
+        nearbyEntities.forEach((eid) => {
+            if (global.Server.globalEntityMap.has(eid)) {
+                let e2 = global.Server.globalEntityMap.get(eid);
+
+                if (e1.collisionEnabled === true && e2.alive !== false && e1.id !== e2.id && e2.collisionEnabled === true) {
+                    if (CollisionUtils.checkEntityCollision(e1, e2)) {
+                        collisions.push(e2.id);
+                    }
                 }
-            }
 
+            }
         });
+
 
         return collisions;
     },
@@ -110,7 +118,7 @@ let CollisionUtils = {
                 let m2 = model2[j1];
                 if (vectorMultiplication(p1, p2, m2) * vectorMultiplication(p1, p2, m1) < 0 &&
                     vectorMultiplication(m1, m2, p2) * vectorMultiplication(m1, m2, p1) < 0)
-                    return {isCollide: true, direction: i};
+                    return true;
             }
         }
         return false;
