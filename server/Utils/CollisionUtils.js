@@ -18,9 +18,11 @@ let CollisionUtils = {
                 if (e1.collisionEnabled === true && e2.alive !== false && e1.id !== e2.id && e2.collisionEnabled === true) {
                     let check = CollisionUtils.checkEntityCollision(e1, e2);
                     if (check.isCollide === true) {
+                        if (check.directionE1 !== null)console.log("E1 side: " + check.directionE1 + "; " +
+                            "E2 side: " + check.directionE2 + ";");
                         collisions.push({
                             entityId: e2.id,
-                            direction: check.direction
+                            direction: check.directionE1
                         });
                     }
                 }
@@ -127,7 +129,7 @@ let CollisionUtils = {
                     let m2 = modelk1[j1];
                     if (vectorMultiplication(p1, p2, m2) * vectorMultiplication(p1, p2, m1) < 0 &&
                         vectorMultiplication(m1, m2, p2) * vectorMultiplication(m1, m2, p1) < 0) {
-                        return {isCollide: true, direction: i};
+                        return {isCollide: true, directionE1: i, directionE2: j};
                     }
                 }
             }
@@ -146,11 +148,11 @@ let CollisionUtils = {
                         vectorMultiplication(modelk[1], modelk[2], modelk1[i]) > 0 &&
                         vectorMultiplication(modelk[2], modelk[3], modelk1[i]) > 0 &&
                         vectorMultiplication(modelk[3], modelk[0], modelk1[i]) > 0)
-                        return {isCollide: true, direction: null};
+                        return {isCollide: true, directionE1: null, directionE2: null};
                 }
             }
         }
-        return {isCollide: false, direction: null};
+        return {isCollide: false, directionE1: null, directionE2: null};
     }
 };
 
