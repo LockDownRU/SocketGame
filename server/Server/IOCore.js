@@ -63,7 +63,8 @@ let IOCore = {
 
     onConnect: (socket) => {
 
-        if (ServerUtils.getClientIp(socket) === '192.168.4.55' || ServerUtils.getClientIp(socket) === '::1') {
+        const customPlayers = false;
+        if ((ServerUtils.getClientIp(socket) === '192.168.4.55' || ServerUtils.getClientIp(socket) === '::1') && customPlayers === true) {
             socket.player = new IlyaPlayer();
         } else {
             socket.player = new Player();
