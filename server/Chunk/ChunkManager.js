@@ -68,8 +68,8 @@ let ChunkManager = {
     // Получение коодинат чанка
     getChunkCoords: (x, y) => {
         return {
-            cx: x >> 4,
-            cy: y >> 4
+            cx: x >> 8,
+            cy: y >> 8
         }
     },
 
