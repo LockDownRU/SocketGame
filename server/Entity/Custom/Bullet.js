@@ -43,8 +43,6 @@ class Bullet extends LiveEntity {
             dieMessage: '{0} всадил пулю в голову {1}!'
         });
 
-        console.log(directionE2);
-
         this.damage(this.hp.max);
     }
 
