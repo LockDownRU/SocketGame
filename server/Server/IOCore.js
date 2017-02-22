@@ -64,9 +64,8 @@ let IOCore = {
 
     onConnect: (socket) => {
 
-        for (let i = 0; i < 5; i++){
-            socket.player = new Bot();
-            IOUtils.spawnEntity(socket.player);
+        for (let i = 0; i < 0; i++){
+            IOUtils.spawnEntity(new Bot());
         }
 
         const customPlayers = true;

@@ -12,8 +12,8 @@ class Bot extends LiveEntity{
 
         this.nickname = 'The Bot';
 
-        this.posX = Math.random()*2000 - 1000;
-        this.posY = Math.random()*2000 - 1000;
+        this.posX = Math.random()*1000 - 500;
+        this.posY = Math.random()*1000 - 500;
 
         this.sprite = 'sq';
         this.width = 50;
@@ -29,8 +29,9 @@ class Bot extends LiveEntity{
         };
 
         this.enemy = undefined;
+        this.fireRadius = 500;
 
-        this.ttl = 1800;
+        this.ttl = 5400 * Math.random();
         this.type.push('Bot');
 
         // Events
@@ -62,41 +63,29 @@ class Bot extends LiveEntity{
     onTick(tick) {
         super.onTick();
 
-        if (this.ttl === 0) {
-            IOUtils.despawnEntity(this.id);
-        } else if (this.ttl > 0) {
-            this.ttl--;
+        if (this.chunk === null) {
+            return;
         }
-
-        let nearbyEntities = global.ChunkManager.getNearbyEntities(this.chunk.cx,this.chunk.cy);
-        let minDistance = null;
 
         let vX = 0;
         let vY = 0;
-        this.enemy = undefined;
+
         this.movement.speed = 50;
 
-        nearbyEntities.forEach((entity) =>{
-            let e = global.Server.globalEntityMap.get(entity);
-            if (e.type.includes('BasePlayer')) {
-                let dist = MathUtils.distance(this.posX, this.posY, e.posX, e.posY);
-                if (minDistance !== null || minDistance < dist) {
-                    minDistance = dist;
-                    this.enemy = e;
-                }
-            }
-        });
+        let aim = this.findAim();
+        let minDistance = aim.distance;
+        this.enemy = aim.enemy;
 
-        if (tick % 90 === 0){
-            vX = Math.random()*2 - 1;
-            vY = Math.sqrt(1 - vX*vX)*2 - 1;
+        if (tick % 90 === 0) {
+            vX = Math.random() * 2 - 1;
+            vY = Math.sqrt(1 - vX * vX) * 2 - 1;
 
             this.movement.vX = vX;
             this.movement.vY = vY;
         }
 
-        if (this.enemy !== undefined && minDistance <= 500){
-            if (minDistance <= 500){
+        if (this.enemy !== undefined && minDistance <= this.fireRadius) {
+            if (minDistance <= this.fireRadius) {
                 let normVec = MathUtils.normalize(this.enemy.posX - this.posX, this.enemy.posY - this.posY);
 
                 this.movement.speed = 150;
@@ -104,27 +93,43 @@ class Bot extends LiveEntity{
                 this.movement.vY = normVec.vY;
             }
 
-            if (minDistance <= 300){
+            if (minDistance <= this.fireRadius-200) {
                 this.eventEmitter.emit('fire', tick, this);
             }
         }
     }
 
+    findAim () {
+        let nearbyEntities = global.ChunkManager.getNearbyEntities(this.chunk.cx, this.chunk.cy);
+        let minDistance = null;
+        let enemy = undefined;
+
+        nearbyEntities.forEach((entity) =>{
+            let e = global.Server.globalEntityMap.get(entity);
+            if (e.type.includes('BasePlayer') && e.alive === true) {
+                let dist = MathUtils.distance(this.posX, this.posY, e.posX, e.posY);
+                if (minDistance !== null || minDistance < dist) {
+                    minDistance = dist;
+                    enemy = e;
+                }
+            }
+        });
+
+        return {enemy: enemy, distance: minDistance};
+    }
+
+    onDamage(damage, source) {
+        return true;
+    }
+
+    onDespawn () {
+        IOUtils.spawnEntity(new Bot());
+    }
+
     onDie (source) {
         super.onDie();
-        console.log('Игрок [' + this.nickname + '] умер.');
-
-        let killer = global.Server.globalEntityMap.get(source.id);
-        let killSource;
-        if (killer === undefined) {
-            killSource = '\\o/';
-        } else {
-            killSource = killer.nickname || '\\o/';
-        }
-
-        let dieMsg = source.dieMessage.format(killSource, this.nickname);
-
-        Chat.sendMessage('Server', dieMsg, '0');
+        this.onDespawn();
+        IOUtils.despawnEntity(this.id);
     }
 }
 

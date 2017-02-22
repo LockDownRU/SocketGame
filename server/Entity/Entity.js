@@ -40,6 +40,10 @@ class Entity {
 
     }
 
+    onDespawn() {
+
+    }
+
     generatePacket() {
         let packet = {
             id: this.id,

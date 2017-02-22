@@ -25,7 +25,10 @@ let IOUtis = {
     despawnEntity: (id) => {
         if (global.Server.globalEntityMap.has(id)) {
 
-            let chunk = global.Server.globalEntityMap.get(id).chunk;
+            let entity = global.Server.globalEntityMap.get(id);
+            entity.onDespawn();
+
+            let chunk = entity.chunk;
             if (chunk instanceof Chunk) {
                 chunk.removeEntity(id);
             }
