@@ -2,16 +2,15 @@
   "name": "socketgame",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server/main.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "deferred": "^0.7.5",
     "express": "^4.14.1",
-    "socket-io": "^1.0.0",
     "socket.io": "^1.7.2",
     "wait.for-es6": "^0.1.0"
   }

@@ -11,14 +11,14 @@ let IOUtils = require('../Utils/IOUtils');
 let ServerUtils = require('../Utils/ServerUtils');
 let GameUtils = require('../Utils/GameUtils');
 
-const serverPort = 80;
+const serverPort = 8080;
 
 let IOCore = {
 
     io: require('socket.io')(httpServer),
 
     init: () => {
-        expressServer.use(express.static('../public'));
+        expressServer.use(express.static('./public'));
         httpServer.listen(serverPort, function () {
             console.log('Сервер запущен. *:' + serverPort);
         });
